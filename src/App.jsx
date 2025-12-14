@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
+
+// --- TOUTES LES ICÔNES RASSEMBLÉES ICI ---
 import { 
-  Github, Linkedin, Code2, Terminal, Database, Cpu, 
+  ShieldCheck, Box, GraduationCap, Github, Linkedin, Code2, Terminal, Database, Cpu, 
   Globe, Calculator, Layers, Server, Gamepad2, Plane, Trophy, 
   Briefcase, Users, FileCode, Star, Mail, Send, MapPin, 
   Tv, HeartPulse, Menu, X, GitCommit, Sun, Moon,
   CheckCircle2, ArrowRight, Lock, Smartphone, Waves,
   Sparkles, Layout, GitBranch, Cloud, Calendar,
-  Utensils, Activity, Signal, FileJson, Braces, HardDrive, Monitor, Wrench, Settings
+  Utensils, Activity, Signal, FileJson, Braces, HardDrive, Monitor, Wrench, Settings,
+  BrainCircuit, Rocket // J'ai ajouté ces deux-là qui manquaient pour la section À Propos
 } from 'lucide-react';
 
-import { ShieldCheck } from 'lucide-react';
+
 // --- COMPOSANT COMPTEUR ANIMÉ ---
 const AnimatedCounter = ({ value, duration = 2 }) => {
   const ref = useRef(null);
@@ -618,12 +621,12 @@ const App = () => {
             animate="visible"
             variants={{
               hidden: { opacity: 0, x: -50 },
-              visible: {
-                opacity: 1,
+              visible: { 
+                opacity: 1, 
                 x: 0,
-                transition: {
-                  staggerChildren: 0.2
-                }
+                transition: { 
+                  staggerChildren: 0.2 
+                } 
               }
             }}
           >
