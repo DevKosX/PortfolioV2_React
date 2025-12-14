@@ -16,7 +16,7 @@ const AnimatedCounter = ({ value, duration = 2 }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   const [displayValue, setDisplayValue] = useState(0);
-   
+    
   const number = parseInt(value.replace(/\D/g, '')) || 0;
   const suffix = value.replace(/[0-9]/g, '');
 
@@ -70,12 +70,11 @@ const Typewriter = ({ text, delay = 100, infinite = true }) => {
 
     if (currentIndex < text.length) {
       timeout = setTimeout(() => {
-        setCurrentText(prevText => prevText + text[currentIndex]);
+        setCurrentText(prevText + text[currentIndex]);
         setCurrentIndex(prevIndex => prevIndex + 1);
       }, delay);
     } else if (infinite) {
-      // Optional: Add logic to reset and loop if needed, 
-      // for simple typewriter just stopping at end is fine or blinking cursor
+      // Optional: Add logic to reset and loop if needed
     }
 
     return () => clearTimeout(timeout);
@@ -91,13 +90,21 @@ const App = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeTrip, setActiveTrip] = useState(null); 
   const [currentTime, setCurrentTime] = useState(new Date());
+  
+  // State pour le formulaire
   const [formStatus, setFormStatus] = useState('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: 'Développement Site Web',
+    message: ''
+  });
+
   const [ping, setPing] = useState(34); 
 
   // Simulation Ping Réseau Live
   useEffect(() => {
     const interval = setInterval(() => {
-      // Simule une variation de ping entre 20ms et 80ms
       const newPing = Math.floor(Math.random() * (80 - 20 + 1)) + 20;
       setPing(newPing);
     }, 2000);
@@ -117,13 +124,40 @@ const App = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // --- GESTION ENVOI EMAIL ---
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     setFormStatus('sending');
+
+    // Construction du lien mailto
+    const recipient = "kosbarmohamed.31@gmail.com";
+    const subject = encodeURIComponent(`Portfolio Contact: ${formData.subject}`);
+    const body = encodeURIComponent(
+      `Nom: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    );
+    
     setTimeout(() => {
+      // Ouvre le client mail par défaut avec les infos pré-remplies
+      window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+      
       setFormStatus('success');
+      // Reset du formulaire
+      setFormData({
+        name: '',
+        email: '',
+        subject: 'Développement Site Web',
+        message: ''
+      });
       setTimeout(() => setFormStatus('idle'), 3000);
-    }, 2000);
+    }, 1500);
   };
 
   // --- DONNÉES VOYAGES ---
@@ -135,7 +169,7 @@ const App = () => {
       accent: "text-amber-500",
       bgImage: "public/images/passions/jardin.jpg",
       locations: [
-        { name: "Le Caire (La civilisation)", desc: "Là où tout commence. La maison de mon grand-père, mes racines profondes. C'est la vie agricole, la connexion à la terre. Le cœur de mon identité.", icon: <Users className="w-5 h-5" />, img: "public/images/passions/village.jpg" },
+        { name: "Le Caire (La capitale)", desc: "Une métropole bouillonnante qui ne dort jamais. Le bruit incessant, les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable. C'est le cœur battant de l'Égypte moderne.", icon: <Users className="w-5 h-5" />, img: "public/images/passions/village.jpg" },
         { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "public/images/passions/alexandria.jpg" },
         { name: "El Sahel (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "public/images/passions/sahel.jpg" }
       ]
@@ -637,6 +671,7 @@ const App = () => {
                  { title: "Développeur Full-Stack", date: "2022 - Présent", desc: "3 ans d'expérience cumulée (académique & projets).", icon: <Code2 />, color: "text-teal-500" },
                  { title: "Stage Développeur - Devea", date: "Jan 2025 - Mars 2025", desc: "Développement Full-Stack Laravel PHP.", icon: <Briefcase />, color: "text-cyan-500" },
                  { title: "Bénévole 24H de l'Info", date: "Mai 2024 - Juin 2024", desc: "Technique organisation de l'événement.", icon: <Users />, color: "text-yellow-400" },
+                 { title: "Coach U11 - ASJA", date: "Oct 2021 - Mai 2022", desc: "Encadrement sportif, pédagogie et gestion d'équipe pour les jeunes (U11).", icon: <Trophy />, color: "text-green-500" },
                  { title: "Stage - OFW Ships", date: "Déc 2019 - Jan 2020", desc: "Découverte IT en entreprise.", icon: <Globe />, color: "text-blue-400" }
                ].map((item, index) => (
                  <motion.div key={index} initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.5, delay: index * 0.1 }} className={`relative group pl-8 lg:pl-0 flex flex-col lg:flex-row gap-6 items-center`}>
@@ -897,8 +932,8 @@ const App = () => {
                <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-48 h-48 text-green-500" /></div>
                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><HeartPulse className="w-6 h-6 text-green-500" /> Le Football, une école de vie</h3>
                <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
-                 <p>Le football est bien plus qu'un sport pour moi. J'ai eu la chance d'atteindre un excellent niveau en évoluant en <span className={`${themeClasses.text} font-bold`}>U17 Nationaux avec Aubervilliers (Génération 2005)</span>.</p>
-                 <p>Malheureusement, une blessure a freiné cette ascension. Mais cette épreuve m'a appris la résilience. J'ai transféré cette compétitivité dans mes études.</p>
+                 <p>Le football est bien plus qu'un sport pour moi. J'ai eu la chance d'atteindre un excellent niveau en évoluant en <span className={`${themeClasses.text} font-bold`}>U17 Nationaux avec Aubervilliers (Génération 2005)</span>. C'était l'école de la rigueur, de la tactique et du dépassement de soi.</p>
+                 <p>Malheureusement, une blessure (la maladie d'Osgood-Schlatter) a freiné cette ascension. Mais cette épreuve m'a appris la résilience. J'ai transféré cette compétitivité et cette soif d'apprendre dans mes études et le développement informatique. Aujourd'hui, je code avec la même intensité que je jouais sur le terrain.</p>
                </div>
             </div>
             <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-red-500/30 transition-all shadow-md`}>
@@ -921,8 +956,8 @@ const App = () => {
                <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Waves className="w-48 h-48 text-teal-500" /></div>
                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Waves className="w-6 h-6 text-teal-500" /> La Natation, mon second souffle</h3>
                <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
-                 <p>De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines, j’ai poursuivi deux ans de natation pour obtenir mon diplôme.</p>
-                 <p>Aujourd'hui, je nage partout : de l'Atlantique (Agadir, Deauville) à la Mer Rouge (Hurghada), en passant par le Nil.</p>
+                 <p>De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité, des atouts majeurs pour mon jeu au football et c'est devenu une passion.</p>
+                 <p>Aujourd'hui, je nage partout : de l'Atlantique (Agadir, Deauville) à la Mer Rouge (Hurghada), en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée.</p>
                </div>
             </div>
             <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-purple-500/30 transition-all shadow-md`}>
@@ -988,7 +1023,7 @@ const App = () => {
                {formStatus === 'success' ? (
                   <div className="h-full flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in zoom-in duration-500">
                      <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/50"><CheckCircle2 className="w-12 h-12 text-green-500" /></div>
-                     <div><h3 className={`text-3xl font-bold ${themeClasses.text} mb-2`}>Message Envoyé !</h3><p className="text-gray-400 text-lg">Merci de m'avoir contacté. Je reviens vers vous très vite.</p></div>
+                     <div><h3 className={`text-3xl font-bold ${themeClasses.text} mb-2`}>Message Prêt !</h3><p className="text-gray-400 text-lg">Votre client mail va s'ouvrir pour finaliser l'envoi.</p></div>
                      <button onClick={() => setFormStatus('idle')} className="text-teal-500 font-bold hover:underline mt-4">Envoyer un autre message</button>
                   </div>
                ) : (
@@ -996,16 +1031,37 @@ const App = () => {
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                            <label className="text-sm font-bold uppercase tracking-wide text-gray-500">Nom Complet</label>
-                           <input type="text" required placeholder="Votre nom" className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} placeholder-gray-500 outline-none transition-colors`} />
+                           <input 
+                             type="text" 
+                             name="name"
+                             value={formData.name}
+                             onChange={handleInputChange}
+                             required 
+                             placeholder="Votre nom" 
+                             className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} placeholder-gray-500 outline-none transition-colors`} 
+                           />
                         </div>
                         <div className="space-y-2">
                            <label className="text-sm font-bold uppercase tracking-wide text-gray-500">Email</label>
-                           <input type="email" required placeholder="votre@email.com" className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} placeholder-gray-500 outline-none transition-colors`} />
+                           <input 
+                             type="email" 
+                             name="email"
+                             value={formData.email}
+                             onChange={handleInputChange}
+                             required 
+                             placeholder="votre@email.com" 
+                             className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} placeholder-gray-500 outline-none transition-colors`} 
+                           />
                         </div>
                      </div>
                      <div className="space-y-2">
                         <label className="text-sm font-bold uppercase tracking-wide text-gray-500">Sujet de Discussion</label>
-                        <select className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} outline-none transition-colors appearance-none`}>
+                        <select 
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleInputChange}
+                          className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} outline-none transition-colors appearance-none`}
+                        >
                            <option>Développement Site Web</option>
                            <option>Application Mobile</option>
                            <option>Proposition de Stage / Emploi</option>
@@ -1015,11 +1071,19 @@ const App = () => {
                      </div>
                      <div className="space-y-2">
                         <label className="text-sm font-bold uppercase tracking-wide text-gray-500">Message</label>
-                        <textarea rows="5" required placeholder="Parlez-moi de votre projet..." className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} placeholder-gray-500 outline-none resize-none transition-colors`}></textarea>
+                        <textarea 
+                          name="message"
+                          value={formData.message}
+                          onChange={handleInputChange}
+                          rows="5" 
+                          required 
+                          placeholder="Parlez-moi de votre projet..." 
+                          className={`w-full ${themeClasses.inputBg} border ${themeClasses.inputBorder} focus:border-teal-500 rounded-xl px-4 py-4 ${themeClasses.text} placeholder-gray-500 outline-none resize-none transition-colors`}
+                        ></textarea>
                      </div>
                     <button type="submit" disabled={formStatus === 'sending'} className="group relative w-full py-5 rounded-xl overflow-hidden border border-teal-500/50 text-teal-600 font-bold tracking-widest uppercase text-sm transition-all duration-300 hover:shadow-[0_0_40px_rgba(20,184,166,0.3)] hover:border-teal-400">
                       <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-gradient-to-r from-teal-500 to-cyan-600 transition-transform duration-500 ease-out" />
-                      <span className="relative z-10 group-hover:text-white transition-colors duration-300">{formStatus === 'sending' ? 'Transmission...' : 'Envoyer le message'}</span>
+                      <span className="relative z-10 group-hover:text-white transition-colors duration-300">{formStatus === 'sending' ? 'Préparation...' : 'Envoyer le message'}</span>
                     </button>
                   </form>
                )}
