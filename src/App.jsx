@@ -135,9 +135,9 @@ const App = () => {
       accent: "text-amber-500",
       bgImage: "public/images/passions/jardin.jpg",
       locations: [
-        { name: "Mit Yazid (Le Village)", desc: "Là où tout commence. La maison de mon grand-père, mes racines profondes. C'est la vie agricole, la connexion à la terre. Le cœur de mon identité.", icon: <Users className="w-5 h-5" />, img: "public/images/passions/village.jpg" },
-        { name: "Alexandrie (La Nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "public/images/passions/alexandria.jpg" },
-        { name: "El Sahel (Le Paradis Moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "public/images/passions/sahel.jpg" }
+        { name: "Le Caire (La civilisation)", desc: "Là où tout commence. La maison de mon grand-père, mes racines profondes. C'est la vie agricole, la connexion à la terre. Le cœur de mon identité.", icon: <Users className="w-5 h-5" />, img: "public/images/passions/village.jpg" },
+        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "public/images/passions/alexandria.jpg" },
+        { name: "El Sahel (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "public/images/passions/sahel.jpg" }
       ]
     },
     morocco: {
@@ -959,7 +959,7 @@ const App = () => {
                   <div className="space-y-8">
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-teal-500/10 rounded-lg text-teal-500 mt-1"><Mail className="w-6 h-6" /></div>
-                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Email</p><a href="mailto:contact@mkosbar.dev" className={`text-xl font-medium ${themeClasses.text} hover:text-teal-500 transition-colors`}>contact@mkosbar.dev</a><p className="text-sm text-gray-500 mt-1">Réponse sous 24h</p></div>
+                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Email</p><a href="mailto:kosbarmohamed.31@gmail.com" className={`text-xl font-medium ${themeClasses.text} hover:text-teal-500 transition-colors`}>kosbarmohamed.31@gmail.com</a><p className="text-sm text-gray-500 mt-1">Réponse sous 24h</p></div>
                      </div>
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-purple-500/10 rounded-lg text-purple-500 mt-1"><MapPin className="w-6 h-6" /></div>
