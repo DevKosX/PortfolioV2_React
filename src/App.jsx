@@ -1005,7 +1005,7 @@ const App = () => {
                      </div>
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-blue-500/10 rounded-lg text-blue-500 mt-1"><Briefcase className="w-6 h-6" /></div>
-                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Statut Actuel</p><div className="flex items-center gap-2"><span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><p className={`text-xl font-medium ${themeClasses.text}`}>En Recherche de Stage</p></div></div>
+                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Statut Actuel</p><div className="flex items-center gap-2"><span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><p className={`text-xl font-medium ${themeClasses.text}`}>En recherche de stage</p></div></div>
                      </div>
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-500 mt-1"><Activity className="w-6 h-6" /></div>
