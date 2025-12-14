@@ -184,9 +184,9 @@ const App = () => {
       accent: "text-red-500",
       bgImage: "/images/passions/hassan2.jpg",
       locations: [
-        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/casa.jpg" },
-        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/marrakech.jpg" },
-        { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.jpg" }
+        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/casa.png" },
+        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/agadir.png" },
+        { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.png" }
       ]
     }
   };
