@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { 
-  Github, Linkedin, ExternalLink, Code2, Terminal, Database, Cpu, 
+  Github, Linkedin, Code2, Terminal, Database, Cpu, 
   Globe, Calculator, Layers, Server, Gamepad2, Plane, Trophy, 
-  Briefcase, Users, FileCode, Star, Mail, Send, Twitter, MapPin, 
-  Tv, HeartPulse, Phone, MessageSquare, Menu, X, GitCommit, Sun, Moon,
-  Play, Minus, Square, CheckCircle2, ArrowRight, Lock, Smartphone, Waves,
-  Clock, Wifi, ShieldCheck, Loader2, GraduationCap, BrainCircuit, Rocket, Sparkles,
-  Dribbble, Frame, Box, Layout, GitBranch, Cloud, Command, Zap, Hexagon, Calendar,
+  Briefcase, Users, FileCode, Star, Mail, Send, MapPin, 
+  Tv, HeartPulse, Menu, X, GitCommit, Sun, Moon,
+  CheckCircle2, ArrowRight, Lock, Smartphone, Waves,
+  Sparkles, Layout, GitBranch, Cloud, Calendar,
   Utensils, Activity, Signal, FileJson, Braces, HardDrive, Monitor, Wrench, Settings
 } from 'lucide-react';
 
@@ -70,7 +69,7 @@ const Typewriter = ({ text, delay = 100, infinite = true }) => {
 
     if (currentIndex < text.length) {
       timeout = setTimeout(() => {
-        setCurrentText(prevText + text[currentIndex]);
+        setCurrentText(prevText => prevText + text[currentIndex]);
         setCurrentIndex(prevIndex => prevIndex + 1);
       }, delay);
     } else if (infinite) {
@@ -167,11 +166,11 @@ const App = () => {
       subtitle: "Mes Racines, Ma Terre",
       color: "from-yellow-600 to-amber-900",
       accent: "text-amber-500",
-      bgImage: "public/images/passions/jardin.jpg",
+      bgImage: "/images/passions/jardin.jpg",
       locations: [
-        { name: "Le Caire (La capitale)", desc: "Une métropole bouillonnante qui ne dort jamais. Le bruit incessant, les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable. C'est le cœur battant de l'Égypte moderne.", icon: <Users className="w-5 h-5" />, img: "public/images/passions/village.jpg" },
-        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "public/images/passions/alexandria.jpg" },
-        { name: "El Sahel (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "public/images/passions/sahel.jpg" }
+        { name: "Le Caire (La capitale)", desc: "Une métropole bouillonnante qui ne dort jamais. Le bruit incessant, les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable. C'est le cœur battant de l'Égypte moderne.", icon: <Users className="w-5 h-5" />, img: "/images/passions/village.jpg" },
+        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/alexandria.jpg" },
+        { name: "El Sahel (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
       ]
     },
     morocco: {
@@ -179,11 +178,11 @@ const App = () => {
       subtitle: "L'Ancrage Maternel",
       color: "from-red-600 to-red-900",
       accent: "text-red-500",
-      bgImage: "public/images/passions/hassan2.jpg",
+      bgImage: "/images/passions/hassan2.jpg",
       locations: [
-        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "public/images/passions/casa.jpg" },
-        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "public/images/passions/marrakech.jpg" },
-        { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "public/images/passions/nador.jpg" }
+        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/casa.jpg" },
+        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/marrakech.jpg" },
+        { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.jpg" }
       ]
     }
   };
@@ -278,7 +277,7 @@ const App = () => {
       longDesc: "Face au gaspillage alimentaire, j'ai conçu cette solution mobile en Dart/Flutter. L'application croise votre stock réel avec une base de données culinaire. Le défi technique résidait dans l'optimisation des requêtes SQLite locales pour garantir une fluidité parfaite hors ligne.",
       features: ["Algorithme anti-gaspillage", "Mode Hors-ligne (SQLite)", "UX optimisée mobile", "Scan d'ingrédients"],
       tags: ["Dart", "Flutter", "SQLite", "MVVM"],
-      image: "public/images/frigo.webp",
+      image: "/images/frigo.webp",
       github: "https://github.com/DevKosX/S501_Developpement",
       icon: <Database className="w-10 h-10 text-teal-400" />
     },
@@ -289,7 +288,7 @@ const App = () => {
       longDesc: "Projet Swing/Java démontrant une robustesse logicielle via une approche TDD stricte avec JUnit. Chaque interaction est testée pour garantir zéro bug. Un code ludique mais industriel.",
       features: ["Architecture modulaire", "Tests > 90%", "Algo de dictionnaire", "Swing GUI"],
       tags: ["Java", "JUnit", "Swing", "TDD"],
-      image: "public/images/find.jpg",
+      image: "/images/find.jpg",
       github: "https://github.com/bouchaiblemaire/r5a8_junit_tests",
       icon: <Terminal className="w-10 h-10 text-teal-400" />
     },
@@ -300,7 +299,7 @@ const App = () => {
       longDesc: "Benchmark technique pour départager Redis et MongoDB sur du tracking GPS temps réel. Simulation de milliers d'écritures pour analyser latence et débit.",
       features: ["Benchmark performance", "Analyse chiffrée", "Docker Microservices", "Charge lourde"],
       tags: ["Mongo", "Redis", "NoSQL", "Big Data"],
-      image: "public/images/uber.webp",
+      image: "/images/uber.webp",
       github: "https://github.com/DevKosX/Projet-UberEats-BDD_Version2",
       icon: <Server className="w-10 h-10 text-teal-400" />
     },
@@ -311,7 +310,7 @@ const App = () => {
       longDesc: "App web d'envergure sous Laravel. Gestion de rôles complexes (Admin, Prof, Élève) et relations de données imbriquées. Architecture MVC stricte et sécurisée.",
       features: ["Sécurité & ACL", "MVC scalable", "Base de données complexe", "Responsive"],
       tags: ["Laravel", "PHP", "Ajax", "MySQL"],
-      image: "public/images/france-academy.png",
+      image: "/images/france-academy.png",
       github: "https://github.com/DevKosX/FranceAcademy",
       icon: <Globe className="w-10 h-10 text-teal-400" />
     },
@@ -322,7 +321,7 @@ const App = () => {
       longDesc: "Digitalisation complète du processus de stage : conventions, signatures, rapports. Analyse fine des processus métiers de l'université.",
       features: ["Digitalisation métier", "PDF dynamique", "Notifications", "Dashboard stats"],
       tags: ["PHP", "HTML/CSS", "JS", "MVC"],
-      image: "public/images/stagelys.png",
+      image: "/images/stagelys.png",
       github: "https://github.com/DevKosX/GestionDesStagesProject",
       icon: <Database className="w-10 h-10 text-teal-400" />
     },
@@ -333,7 +332,7 @@ const App = () => {
       longDesc: "Site officiel immersif pour les '24h de l'Info'. Présentation du programme, défis temps réel et partenaires avec une identité visuelle forte.",
       features: ["UI/UX immersif", "Communication", "Multimédia", "Responsive"],
       tags: ["Web Design", "Wix", "Event"],
-      image: "public/images//passions/24Info.png",
+      image: "/images//passions/24Info.png",
       website: "https://akd9380devlg.wixsite.com/24h-de-l",
       github: null,
       icon: <Layout className="w-10 h-10 text-teal-400" />
@@ -345,7 +344,7 @@ const App = () => {
       longDesc: "Étude de cas POO. Utilisation du pattern Command pour encapsuler les opérations, rendant le code extensible sans toucher au cœur.",
       features: ["Pattern Command", "Découplage", "Gestion erreurs", "Extensible"],
       tags: ["Java", "POO", "Patterns", "UML"],
-      image: "public/images/calculatrice.png",
+      image: "/images/calculatrice.png",
       github: "https://github.com/DevKosX/CalculatriceJavaV2",
       icon: <Calculator className="w-10 h-10 text-teal-400" />
     },
@@ -356,7 +355,7 @@ const App = () => {
       longDesc: "Projet Hackathon 24h. Simulation visuelle de probabilités mathématiques. Travail d'équipe sous haute pression.",
       features: ["Développement Agile", "Travail d'équipe", "Visualisation Données"],
       tags: ["Java", "Hackathon", "Agile"],
-      image: "public/images/fakir.jpg",
+      image: "/images/fakir.jpg",
       github: null,
       icon: <Code2 className="w-10 h-10 text-teal-400" />
     },
@@ -367,7 +366,7 @@ const App = () => {
       longDesc: "Mission de consulting. Traduction des besoins opérationnels en spécifications techniques (UML, User Stories) pour la refonte du SI.",
       features: ["Ingénierie exigences", "UML avancé", "Interviews", "Maquettage"],
       tags: ["Analyse", "UML", "Figma", "Doc"],
-      image: "public/images/recueil-besoin.jpg",
+      image: "/images/recueil-besoin.jpg",
       github: "https://github.com/DevKosX/ObservatoireDeJuvisy",
       icon: <Terminal className="w-10 h-10 text-teal-400" />
     },
@@ -378,7 +377,7 @@ const App = () => {
       longDesc: "Administration système. Contournement des limitations carte SD pour boot sur SSD. Maîtrise kernel Linux, fstab et permissions.",
       features: ["SysAdmin Linux", "Hardware", "Bash", "Storage"],
       tags: ["Linux", "Bash", "Hardware"],
-      image: "public/images/raspberry-boot.jpg",
+      image: "/images/raspberry-boot.jpg",
       github: null,
       icon: <Cpu className="w-10 h-10 text-teal-400" />
     },
@@ -389,7 +388,7 @@ const App = () => {
       longDesc: "Conception de A à Z d'une BDD complexe. Méthode Merise pour l'intégrité. Implémentation PostgreSQL avec procédures stockées.",
       features: ["MCD/MLD", "SQL Avancé", "Intégrité", "Procédures"],
       tags: ["SQL", "Postgres", "Merise"],
-      image: "public/images/database-freedom.jpg",
+      image: "/images/database-freedom.jpg",
       github: null,
       icon: <Database className="w-10 h-10 text-teal-400" />
     },
@@ -400,7 +399,7 @@ const App = () => {
       longDesc: "Défi algorithmique Python. Résolution du problème du voyageur de commerce à grande échelle via heuristiques et théorie des graphes.",
       features: ["Théorie Graphes", "Optimisation", "Data Structures"],
       tags: ["Python", "Algo", "Heuristics"],
-      image: "public/images/santa-claus.jpg",
+      image: "/images/santa-claus.jpg",
       github: null,
       icon: <Code2 className="w-10 h-10 text-teal-400" />
     }
@@ -806,7 +805,7 @@ const App = () => {
                   <div className="absolute inset-0 rounded-full border-2 border-teal-500/30 animate-[spin_10s_linear_infinite]" />
                   <div className="absolute inset-2 rounded-full border-2 border-cyan-500/30 animate-[spin_15s_linear_infinite_reverse]" />
                   <div className="w-full h-full rounded-full overflow-hidden border-4 border-gray-800 shadow-2xl relative">
-                    <img src="public/images/tiit.jpg" alt="Avatar" className="w-full h-full object-cover" onError={(e) => { e.target.style.display='none'; e.target.parentNode.style.backgroundColor='#1a1a1a'; }} />
+                    <img src="/images/tiit.jpg" alt="Avatar" className="w-full h-full object-cover" onError={(e) => { e.target.style.display='none'; e.target.parentNode.style.backgroundColor='#1a1a1a'; }} />
                     <div className="absolute inset-0 bg-gradient-to-t from-teal-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                   <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full border border-white/10 shadow-lg">LVL. 3</div>
@@ -881,7 +880,7 @@ const App = () => {
             {!activeTrip && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-96 transition-all duration-500 ease-in-out">
                 <div onClick={() => setActiveTrip('egypt')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-amber-500/50 transition-all duration-300">
-                  <img src="public/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
+                  <img src="/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
                   <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines paternelles</span>
@@ -890,7 +889,7 @@ const App = () => {
                   </div>
                 </div>
                 <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
-                  <img src="public/images/passions/hassan2.jpg" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
+                  <img src="/images/passions/hassan2.jpg" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
                   <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines maternelles</span>
@@ -940,11 +939,11 @@ const App = () => {
                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Tv className="w-6 h-6 text-red-500" /> Cinéphile</h3>
                <div className="space-y-6">
                  <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="public/images/passions/st.jpg" alt="Stranger Things" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/st.jpg" alt="Stranger Things" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
                     <div><h4 className={`${themeClasses.text} font-bold group-hover:text-red-500 transition-colors`}>Stranger Things</h4><p className={`text-xs ${themeClasses.textMuted}`}>Mystère & Années 80</p></div>
                  </div>
                  <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="public/images/passions/echo.webp" alt="Echoes of the Past" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/echo.webp" alt="Echoes of the Past" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
                     <div><h4 className={`${themeClasses.text} font-bold group-hover:text-yellow-500 transition-colors`}>Echoes of the Past</h4><p className={`text-xs ${themeClasses.textMuted}`}>Drame Égyptien</p></div>
                  </div>
                </div>
@@ -964,11 +963,11 @@ const App = () => {
                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Gamepad2 className="w-6 h-6 text-purple-500" /> Gamer</h3>
                <div className="space-y-6">
                  <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="public/images/fm.avif" alt="Football Manager" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/fm.avif" alt="Football Manager" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
                     <div><h4 className={`${themeClasses.text} font-bold group-hover:text-purple-500 transition-colors`}>Football Manager</h4><p className={`text-xs ${themeClasses.textMuted}`}>Stratégie & Gestion</p></div>
                  </div>
                  <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="public/images/last.jpg" alt="The Last of Us" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/last.jpg" alt="The Last of Us" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
                     <div><h4 className={`${themeClasses.text} font-bold group-hover:text-green-500 transition-colors`}>The Last of Us</h4><p className={`text-xs ${themeClasses.textMuted}`}>Narratif & Émotion</p></div>
                  </div>
                </div>
