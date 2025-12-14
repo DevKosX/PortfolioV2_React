@@ -10,6 +10,7 @@ import {
   Utensils, Activity, Signal, FileJson, Braces, HardDrive, Monitor, Wrench, Settings
 } from 'lucide-react';
 
+import { ShieldCheck } from 'lucide-react';
 // --- COMPOSANT COMPTEUR ANIMÉ ---
 const AnimatedCounter = ({ value, duration = 2 }) => {
   const ref = useRef(null);
