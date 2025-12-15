@@ -357,7 +357,7 @@ const App = () => {
         id: 4,
         title: "Développeur Full-Stack (BUT)", 
         company: "Projets Académiques & Personnels",
-        date: "2022 - Présent", 
+        date: "2023 - Présent", 
         desc: "3 ans d'apprentissage intensif et de projets concrets.", 
         fullDesc: "Depuis mon entrée en BUT Informatique, j'ai réalisé énormément de projets académiques et personnels. J'ai conçu des architectures mobiles et web complexes, en essayant toujours de réfléchir comme un développeur Full Stack confirmé. J'ai fait preuve d'une grande autonomie pour apprendre de nouvelles technologies (Flutter, React, Spring) en dehors du cursus classique.",
         skills: ["Autonomie", "Architecture Logicielle", "Full Stack (Java/JS)", "Mobile (Flutter)", "Auto-formation"],
@@ -807,7 +807,7 @@ const App = () => {
               ))}
 
               <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }} className="flex flex-wrap gap-3 pt-2">
-                {["Curiosité", "Travail d'équipe", "Rigueur", "Autonomie", "Leader", "Clean Code", "Adaptabilité"].map((skill, idx) => (
+                {["Curiosité", "Travail d'équipe", "Rigueur", "Autonomie", "Leader", "Clean Code", "Adaptabilité", "Documentation", "Gestion de projet"].map((skill, idx) => (
                   <span key={idx} className={`px-4 py-2 rounded-full text-xs font-bold font-mono border ${isDarkMode ? 'bg-teal-900/20 border-teal-500/30 text-teal-300 hover:bg-teal-900/40' : 'bg-teal-50 border-teal-200 text-teal-700'} transition-all cursor-crosshair flex items-center gap-2 hover:scale-105`}>
                     <Crosshair className="w-3 h-3" />{skill}
                   </span>
