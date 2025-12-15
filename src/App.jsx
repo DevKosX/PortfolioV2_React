@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 // --- TOUTES LES ICÔNES ---
@@ -10,7 +10,7 @@ import {
   CheckCircle2, ArrowRight, Lock, Smartphone, Waves,
   Sparkles, Layout, GitBranch, Cloud, Calendar,
   Utensils, Activity, Signal, FileJson, Braces, HardDrive, Monitor, Wrench, Settings,
-  BrainCircuit, Rocket, SunMedium, Eye, ZoomIn
+  BrainCircuit, Rocket, SunMedium, Eye, ZoomIn, ScanLine, Fingerprint, Crosshair, Check
 } from 'lucide-react';
 
 // --- 1. COMPOSANT CANVAS PARTICLES (HERO BACKGROUND) ---
@@ -180,12 +180,11 @@ const SectionWrapper = ({ children, id, className }) => {
 };
 
 // --- COMPOSANT TYPEWRITER ---
-const Typewriter = ({ text, delay = 100, infinite = true }) => {
+const Typewriter = ({ text, delay = 50, infinite = true }) => {
   const [currentText, setCurrentText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeStringIndex, setActiveStringIndex] = useState(0);
 
-  // Gestion si text est un tableau ou une chaine
   const strings = Array.isArray(text) ? text : [text];
 
   useEffect(() => {
@@ -202,7 +201,7 @@ const Typewriter = ({ text, delay = 100, infinite = true }) => {
          setCurrentText('');
          setCurrentIndex(0);
          setActiveStringIndex(prev => (prev + 1) % strings.length);
-       }, 2000); // Pause avant la prochaine phrase
+       }, 2000); 
     }
 
     return () => clearTimeout(timeout);
@@ -216,9 +215,12 @@ const App = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedExperience, setSelectedExperience] = useState(null); // Nouveau pour le Drawer
+  const [selectedExperience, setSelectedExperience] = useState(null); 
   const [activeTrip, setActiveTrip] = useState(null); 
   const [currentTime, setCurrentTime] = useState(new Date());
+  
+  // State pour l'animation "Scanner" de la section About
+  const [scanComplete, setScanComplete] = useState(false);
    
   // State pour le formulaire
   const [formStatus, setFormStatus] = useState('idle');
@@ -296,175 +298,98 @@ const App = () => {
     }
   };
 
-  // --- DONNÉES PARCOURS AMÉLIORÉES ---
+  // --- DONNÉES PARCOURS (DÉTAILLÉES) ---
   const experiencesData = [
     { 
         id: 1,
-        title: "Développeur Full-Stack", 
-        date: "2022 - Présent", 
-        desc: "3 ans d'expérience cumulée (académique & projets).", 
-        fullDesc: "Au cours de ces trois années, j'ai transformé ma passion en expertise technique. J'ai navigué sur des projets variés, allant d'applications mobiles Flutter complexes à des backends robustes en Java/Spring.",
-        skills: ["React", "Node.js", "Java", "Flutter", "DevOps"],
-        images: ["/images/frigo.webp", "/images/france-academy.png"],
-        icon: <Code2 />, 
-        color: "text-teal-500" 
-    },
-    { 
-        id: 2,
-        title: "Stage Développeur - Devea", 
+        title: "Stage Développement Web", 
+        company: "Devea SAS",
         date: "Jan 2025 - Mars 2025", 
-        desc: "Développement Full-Stack Laravel PHP.", 
-        fullDesc: "Intégration au sein d'une équipe Agile. Conception et développement de modules critiques pour l'ERP interne de l'entreprise sous Laravel. Optimisation des requêtes SQL et refactorisation de code legacy.",
-        skills: ["Laravel", "MySQL", "GitLab", "Agile"],
-        images: ["/images/stago.jpg", "/images/recueil-besoin.jpg"],
+        desc: "Développement Full-Stack Laravel PHP & France Academy.", 
+        fullDesc: "J'ai effectué un stage intensif au sein de l'entreprise Devea, intégré à l'équipe de développement. Ce stage a été une véritable immersion professionnelle, centrée sur le développement d’un ERP interne et la participation au projet France Academy. J'ai travaillé principalement avec le framework Laravel (PHP) sur des modules métiers (gestion utilisateurs, formations, tableaux de bord). Cette expérience a renforcé mes compétences back-end et ma compréhension de l'architecture d'entreprise.",
+        skills: ["Laravel (PHP)", "MySQL", "Architecture MVC", "Méthode Agile SCRUM", "Git/GitLab"],
+        realizations: [
+            "Participation au développement de l’ERP interne (modules utilisateurs, gestion des droits).",
+            "Implémentation de fonctionnalités pour le projet France Academy.",
+            "Écriture de requêtes optimisées et contrôleurs Laravel.",
+            "Tests fonctionnels et corrections de bugs."
+        ],
+        images: ["/images/DEVEA.jpg", "/images/france-academy.png"],
         icon: <Briefcase />, 
         color: "text-cyan-500" 
     },
     { 
-        id: 3,
-        title: "Bénévole 24H de l'Info", 
+        id: 2,
+        title: "Staff Technique & Organisation", 
+        company: "24H de l'Info - IUT Villetaneuse",
         date: "Mai 2024 - Juin 2024", 
-        desc: "Technique organisation de l'événement.", 
-        fullDesc: "Membre actif du staff technique. Gestion du réseau, support aux participants (hackathon), et maintenance du site web de l'événement en temps réel.",
-        skills: ["Réseau", "Support", "Communication", "Wix"],
+        desc: "Organisation complète de l'événement et support technique.", 
+        fullDesc: "J’ai participé activement à l'organisation complète de l’événement '24H de l'Info'. Impliqué dans la planification logistique, la coordination des équipes, la gestion du matériel informatique et l'accueil. J’ai assuré la mise en place des espaces de travail, la communication avec les intervenants et l'encadrement des équipes. J'ai également créé un site pour recueillir les avis.",
+        skills: ["Gestion de projet", "Support Réseau", "Communication", "Wix", "Logistique"],
+        realizations: [
+            "Organisation complète et accueil des participants.",
+            "Préparation logistique des salles et postes informatiques.",
+            "Coordination avec les équipes techniques et pédagogiques.",
+            "Création du site de feedback (Wix)."
+        ],
         images: ["/images/passions/24Info.png"],
         icon: <Users />, 
         color: "text-yellow-400" 
     },
     { 
-        id: 4,
-        title: "Coach U11 - ASJA", 
+        id: 3,
+        title: "Assistant Coach U11", 
+        company: "ASJA (Aubervilliers)",
         date: "Oct 2021 - Mai 2022", 
-        desc: "Encadrement sportif, pédagogie et gestion d'équipe pour les jeunes (U11).", 
-        fullDesc: "Gestion d'un groupe de 15 enfants. Planification des entraînements, gestion des conflits, et développement de l'esprit d'équipe. Des compétences transversales essentielles pour le management de projet.",
-        skills: ["Leadership", "Pédagogie", "Management", "Communication"],
-        images: ["/images/passions/st.jpg"], // Placeholder sport
+        desc: "Encadrement sportif et gestion tactique.", 
+        fullDesc: "En tant que jeune assistant coach, j'ai aidé l'entraîneur principal à composer ses entraînements et à développer les jeunes joueurs de ma ville. Mon rôle impliquait de réfléchir aux tactiques en fonction des adversaires et d'assurer la cohésion du groupe. J'étais présent aux entraînements et aux matchs bénévolement. Nous avons réalisé une super saison, finissant à la 2ème place avec les benjamins d'Aubervilliers.",
+        skills: ["Leadership", "Gestion de conflits", "Pédagogie", "Stratégie Tactique", "Travail d'équipe"],
+        realizations: [
+            "Vice-champion de la saison avec les Benjamins.",
+            "Développement technique et tactique des jeunes.",
+            "Gestion de la cohésion de groupe."
+        ],
+        images: ["/images/passions/st.jpg"], 
         icon: <Trophy />, 
         color: "text-green-500" 
     },
     { 
+        id: 4,
+        title: "Développeur Full-Stack (BUT)", 
+        company: "Projets Académiques & Personnels",
+        date: "2022 - Présent", 
+        desc: "3 ans d'apprentissage intensif et de projets concrets.", 
+        fullDesc: "Depuis mon entrée en BUT Informatique, j'ai réalisé énormément de projets académiques et personnels. J'ai conçu des architectures mobiles et web complexes, en essayant toujours de réfléchir comme un développeur Full Stack confirmé. J'ai fait preuve d'une grande autonomie pour apprendre de nouvelles technologies (Flutter, React, Spring) en dehors du cursus classique.",
+        skills: ["Autonomie", "Architecture Logicielle", "Full Stack (Java/JS)", "Mobile (Flutter)", "Auto-formation"],
+        realizations: [
+            "Développement d'applications mobiles complètes.",
+            "Conception d'architectures Back-end robustes.",
+            "Veille technologique constante."
+        ],
+        images: ["/images/frigo.webp", "/images/find.jpg"],
+        icon: <Code2 />, 
+        color: "text-teal-500" 
+    },
+    { 
         id: 5,
-        title: "Stage - OFW Ships", 
+        title: "Stage Découverte Maritime", 
+        company: "OFW Ships",
         date: "Déc 2019 - Jan 2020", 
-        desc: "Découverte IT en entreprise.", 
-        fullDesc: "Première immersion dans le monde professionnel IT. Observation de l'administration réseau et support utilisateur de premier niveau.",
-        skills: ["Hardware", "Réseau", "Windows Server"],
+        desc: "Expérience immersive en Norvège.", 
+        fullDesc: "Une expérience humaine et professionnelle inoubliable au sein d'OFW Ships (pêche en eaux salées). La première semaine dans les bureaux pour découvrir la logistique maritime. La seconde semaine, j’ai embarqué avec l’équipe sur un navire de pêche en Norvège. Une immersion totale qui m'a appris l'adaptabilité, le travail d'équipe en conditions difficiles et le fonctionnement de l'industrie.",
+        skills: ["Adaptabilité", "Travail en conditions difficiles", "Logistique", "Communication internationale"],
+        realizations: [
+            "Immersion sur un navire en Norvège.",
+            "Observation des opérations logistiques.",
+            "Intégration dans un équipage professionnel."
+        ],
         images: ["/images/raspberry-boot.jpg"],
         icon: <Globe />, 
         color: "text-blue-400" 
     }
   ];
 
-  // --- DONNÉES VOYAGES ---
-  const tripDetails = {
-    egypt: {
-      title: "L'Égypte",
-      subtitle: "Mes Racines, Ma Terre",
-      color: "from-yellow-600 to-amber-900",
-      accent: "text-amber-500",
-      bgImage: "/images/passions/jardin.jpg",
-      locations: [
-        { name: "Le Caire (La civilisation)", desc: "Une métropole bouillonnante et historique qui ne dort jamais. Les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable.", icon: <Users className="w-5 h-5" />, img: "/images/passions/lecaire.png" },
-        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/alexa.png" },
-        { name: "Marassi (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
-      ]
-    },
-    morocco: {
-      title: "Le Maroc",
-      subtitle: "L'Ancrage Maternel",
-      color: "from-red-600 to-red-900",
-      accent: "text-red-500",
-      bgImage: "/images/passions/casa.png",
-      locations: [
-        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/hassan2.jpg" },
-        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/mamara.png" },
-        { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.png" }
-      ]
-    }
-  };
-
-  // --- STATS ---
-  const stats = [
-    { label: "Projets", value: "15+", icon: <Briefcase className="w-5 h-5 text-teal-500"/> },
-    { label: "Clients", value: "5", icon: <Users className="w-5 h-5 text-cyan-500"/> },
-    { label: "Années Exp.", value: "3", icon: <Star className="w-5 h-5 text-yellow-400"/> },
-    { label: "Lignes de Code", value: "45k", icon: <FileCode className="w-5 h-5 text-emerald-500"/> },
-    { label: "Technologies", value: "20+", icon: <Layers className="w-5 h-5 text-blue-400"/> },
-    { label: "Commits Git", value: "350+", icon: <GitCommit className="w-5 h-5 text-pink-400"/> },
-  ];
-
-// --- STACK TECHNIQUE ---
-  const techStackStructured = {
-    "Langages & Fondamentaux": [
-      { name: "HTML / CSS", projects: "12+", icon: <Layout />, color: "text-orange-400", gradient: "from-orange-400 to-red-500" },
-      { name: "JavaScript", projects: 6, icon: <FileCode />, color: "text-yellow-400", gradient: "from-yellow-400 to-orange-500" },
-      { name: "Java", projects: 5, icon: <Code2 />, color: "text-orange-500", gradient: "from-orange-500 to-red-600" },
-      { name: "SQL", projects: 5, icon: <Database />, color: "text-pink-400", gradient: "from-pink-400 to-rose-600" },
-      { name: "PHP", projects: 4, icon: <Terminal />, color: "text-indigo-400", gradient: "from-indigo-400 to-purple-600" },
-      { name: "Python", projects: 3, icon: <Code2 />, color: "text-emerald-400", gradient: "from-emerald-400 to-green-600" },
-      { name: "Bash", projects: 3, icon: <Terminal />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" },
-      { name: "Dart", projects: 2, icon: <Smartphone />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" },
-      { name: "TypeScript", projects: 1, icon: <FileCode />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" },
-      { name: "C++", projects: 1, icon: <Braces />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-700" },
-    ],
-    "Frameworks & Web": [
-      { name: "AJAX / JSON", projects: 6, icon: <FileJson />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" },
-      { name: "Bootstrap", projects: 4, icon: <Layout />, color: "text-purple-500", gradient: "from-purple-500 to-indigo-600" },
-      { name: "Tailwind CSS", projects: 3, icon: <Layout />, color: "text-cyan-400", gradient: "from-cyan-400 to-teal-500" },
-      { name: "API REST", projects: 3, icon: <Globe />, color: "text-green-400", gradient: "from-green-400 to-teal-500" },
-      { name: "Laravel", projects: 2, icon: <Layers />, color: "text-red-500", gradient: "from-red-500 to-rose-600" },
-      { name: "React", projects: 2, icon: <Globe />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" },
-      { name: "Flutter", projects: 2, icon: <Smartphone />, color: "text-sky-400", gradient: "from-sky-400 to-blue-600" },
-      { name: "Node.js", projects: 2, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" },
-      { name: "Blade", projects: 2, icon: <FileCode />, color: "text-red-400", gradient: "from-red-400 to-orange-500" },
-      { name: "Spring Boot", projects: 1, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-700" },
-      { name: "Flask", projects: 1, icon: <Server />, color: "text-gray-300", gradient: "from-gray-300 to-gray-500" },
-      { name: "JWT", projects: 1, icon: <Lock />, color: "text-yellow-500", gradient: "from-yellow-500 to-amber-600" },
-      { name: "jQuery", projects: 1, icon: <FileJson />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-500" },
-    ],
-    "Architecture & Conception": [
-      { name: "UML", projects: 8, icon: <Activity />, color: "text-yellow-600", gradient: "from-yellow-600 to-amber-700" },
-      { name: "MVC", projects: "5+", icon: <Layers />, color: "text-indigo-500", gradient: "from-indigo-500 to-purple-600" },
-      { name: "SOLID", projects: 5, icon: <ShieldCheck />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" },
-      { name: "MVVM", projects: "4+", icon: <Smartphone />, color: "text-rose-500", gradient: "from-rose-500 to-pink-600" },
-      { name: "Clean Code", projects: 3, icon: <Sparkles />, color: "text-teal-500", gradient: "from-teal-500 to-emerald-600" },
-      { name: "TDD", projects: 2, icon: <CheckCircle2 />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" },
-    ],
-    "Données & Stockage": [
-      { name: "MySQL", projects: 6, icon: <Database />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" },
-      { name: "phpMyAdmin", projects: 4, icon: <Settings />, color: "text-orange-300", gradient: "from-orange-300 to-yellow-500" },
-      { name: "PostgreSQL", projects: 3, icon: <Database />, color: "text-indigo-400", gradient: "from-indigo-400 to-blue-500" },
-      { name: "SQLite", projects: 2, icon: <HardDrive />, color: "text-sky-400", gradient: "from-sky-400 to-blue-500" },
-      { name: "Firebase", projects: 2, icon: <Cloud />, color: "text-yellow-500", gradient: "from-yellow-500 to-orange-600" },
-      { name: "MongoDB", projects: 1, icon: <Database />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" },
-      { name: "Redis", projects: 1, icon: <Database />, color: "text-red-500", gradient: "from-red-500 to-rose-600" },
-    ],
-    "DevOps, Outils & Serveurs": [
-      { name: "Git / GitHub", projects: 12, icon: <GitBranch />, color: "text-orange-600", gradient: "from-orange-600 to-red-600" },
-      { name: "Linux", projects: 8, icon: <Terminal />, color: "text-yellow-300", gradient: "from-yellow-300 to-amber-500" },
-      { name: "Maven", projects: 4, icon: <Wrench />, color: "text-red-500", gradient: "from-red-500 to-rose-600" },
-      { name: "Jira / Freedcamp", projects: 3, icon: <Layout />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" },
-      { name: "VirtualBox", projects: 3, icon: <Box />, color: "text-blue-300", gradient: "from-blue-300 to-indigo-400" },
-      { name: "GitLab", projects: 2, icon: <GitBranch />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" },
-      { name: "Docker", projects: 2, icon: <Box />, color: "text-blue-500", gradient: "from-blue-500 to-indigo-600" },
-      { name: "Composer", projects: 2, icon: <Box />, color: "text-amber-600", gradient: "from-amber-600 to-orange-700" },
-      { name: "Postman", projects: 2, icon: <Send />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" },
-      { name: "Vagrant", projects: 2, icon: <Box />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" },
-      { name: "Figma / Readdy", projects: 2, icon: <Layout />, color: "text-purple-400", gradient: "from-purple-400 to-pink-500" },
-      { name: "Jenkins", projects: 1, icon: <Settings />, color: "text-red-300", gradient: "from-red-300 to-orange-400" },
-      { name: "Nginx", projects: 1, icon: <Server />, color: "text-green-400", gradient: "from-green-400 to-emerald-500" },
-      { name: "Apache Tomcat", projects: 1, icon: <Server />, color: "text-yellow-600", gradient: "from-yellow-600 to-orange-700" },
-    ],
-    "IDE & Productivité": [
-      { name: "VS Code", projects: 12, icon: <Monitor />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" },
-      { name: "IntelliJ IDEA", projects: 10, icon: <Monitor />, color: "text-purple-500", gradient: "from-purple-500 to-pink-600" },
-      { name: "Prompt IA", projects: 7, icon: <Sparkles />, color: "text-fuchsia-400", gradient: "from-fuchsia-400 to-purple-600" },
-      { name: "NetBeans", projects: 2, icon: <Layout />, color: "text-teal-400", gradient: "from-teal-400 to-green-500" },
-      { name: "Xcode", projects: 1, icon: <Monitor />, color: "text-blue-300", gradient: "from-blue-300 to-sky-400" },
-    ]
-  };
-
-  // --- PROJETS (Réorganisé : Fakir en 6e, 24H déplacé) ---
+  // --- PROJETS (12 Projets, Fakir en 6e, 24h retiré) ---
   const projects = [
     {
       id: 1,
@@ -522,7 +447,7 @@ const App = () => {
       icon: <Database className="w-10 h-10 text-teal-400" />
     },
     {
-      id: 6, // JEU DU FAKIR ICI (6e projet)
+      id: 6, // JEU DU FAKIR ICI
       title: "Jeu du Fakir",
       desc: "Simulation Planche de Galton (Hackathon).",
       longDesc: "Projet Hackathon 24h. Simulation visuelle de probabilités mathématiques. Travail d'équipe sous haute pression. Visualisation des distributions normales.",
@@ -542,18 +467,6 @@ const App = () => {
       image: "/images/calculatrice.png",
       github: "https://github.com/DevKosX/CalculatriceJavaV2",
       icon: <Calculator className="w-10 h-10 text-teal-400" />
-    },
-    {
-      id: 8,
-      title: "Site 24H de l'Info",
-      desc: "Site vitrine interactif pour l'événement national IUT.",
-      longDesc: "Site officiel immersif pour les '24h de l'Info'. Présentation du programme, défis temps réel et partenaires avec une identité visuelle forte.",
-      features: ["UI/UX immersif", "Communication", "Multimédia", "Responsive"],
-      tags: ["Web Design", "Wix", "Event"],
-      image: "/images//passions/24Info.png",
-      website: "https://akd9380devlg.wixsite.com/24h-de-l",
-      github: null,
-      icon: <Layout className="w-10 h-10 text-teal-400" />
     },
     {
       id: 9,
@@ -603,17 +516,17 @@ const App = () => {
 
   const navLinks = [
     { href: "#accueil", label: "Accueil" },
+    { href: "#about", label: "À Propos" },
     { href: "#dashboard", label: "Expériences" },
     { href: "#projets", label: "Projets" },
     { href: "#stack", label: "Stack" },
-    { href: "#about", label: "À Propos" },
     { href: "#passions", label: "Passions" },
     { href: "#contact", label: "Contact" },
   ];
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
-  // STYLES DYNAMIQUES (FIX LIGHT/DARK)
+  // STYLES DYNAMIQUES
   const themeClasses = {
     bg: isDarkMode ? "bg-[#0a0a0a]" : "bg-gray-50",
     text: isDarkMode ? "text-white" : "text-gray-900",
@@ -627,6 +540,38 @@ const App = () => {
     inputBg: isDarkMode ? "bg-[#1a1a24]" : "bg-white",
     inputBorder: isDarkMode ? "border-white/10" : "border-gray-300",
   };
+
+  // --- DONNÉES VOYAGES & STACK ---
+  const tripDetails = {
+    egypt: {
+      title: "L'Égypte",
+      subtitle: "Mes Racines, Ma Terre",
+      color: "from-yellow-600 to-amber-900",
+      accent: "text-amber-500",
+      bgImage: "/images/passions/jardin.jpg",
+      locations: [
+        { name: "Le Caire (La civilisation)", desc: "Une métropole bouillonnante et historique qui ne dort jamais. Les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable.", icon: <Users className="w-5 h-5" />, img: "/images/passions/lecaire.png" },
+        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/alexa.png" },
+        { name: "Marassi (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
+      ]
+    },
+    morocco: {
+      title: "Le Maroc",
+      subtitle: "L'Ancrage Maternel",
+      color: "from-red-600 to-red-900",
+      accent: "text-red-500",
+      bgImage: "/images/passions/casa.png",
+      locations: [
+        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/hassan2.jpg" },
+        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/mamara.png" },
+        { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.png" }
+      ]
+    }
+  };
+
+  
+  const stats = [ { label: "Projets", value: "15+", icon: <Briefcase className="w-5 h-5 text-teal-500"/> }, { label: "Clients", value: "5", icon: <Users className="w-5 h-5 text-cyan-500"/> }, { label: "Années Exp.", value: "3", icon: <Star className="w-5 h-5 text-yellow-400"/> }, { label: "Lignes de Code", value: "45k", icon: <FileCode className="w-5 h-5 text-emerald-500"/> }, { label: "Technologies", value: "20+", icon: <Layers className="w-5 h-5 text-blue-400"/> }, { label: "Commits Git", value: "350+", icon: <GitCommit className="w-5 h-5 text-pink-400"/> }, ];
+  const techStackStructured = { "Langages & Fondamentaux": [ { name: "HTML / CSS", projects: "12+", icon: <Layout />, color: "text-orange-400", gradient: "from-orange-400 to-red-500" }, { name: "JavaScript", projects: 6, icon: <FileCode />, color: "text-yellow-400", gradient: "from-yellow-400 to-orange-500" }, { name: "Java", projects: 5, icon: <Code2 />, color: "text-orange-500", gradient: "from-orange-500 to-red-600" }, { name: "SQL", projects: 5, icon: <Database />, color: "text-pink-400", gradient: "from-pink-400 to-rose-600" }, { name: "PHP", projects: 4, icon: <Terminal />, color: "text-indigo-400", gradient: "from-indigo-400 to-purple-600" }, { name: "Python", projects: 3, icon: <Code2 />, color: "text-emerald-400", gradient: "from-emerald-400 to-green-600" }, { name: "Bash", projects: 3, icon: <Terminal />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Dart", projects: 2, icon: <Smartphone />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "TypeScript", projects: 1, icon: <FileCode />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "C++", projects: 1, icon: <Braces />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-700" }, ], "Frameworks & Web": [ { name: "AJAX / JSON", projects: 6, icon: <FileJson />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Bootstrap", projects: 4, icon: <Layout />, color: "text-purple-500", gradient: "from-purple-500 to-indigo-600" }, { name: "Tailwind CSS", projects: 3, icon: <Layout />, color: "text-cyan-400", gradient: "from-cyan-400 to-teal-500" }, { name: "API REST", projects: 3, icon: <Globe />, color: "text-green-400", gradient: "from-green-400 to-teal-500" }, { name: "Laravel", projects: 2, icon: <Layers />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "React", projects: 2, icon: <Globe />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "Flutter", projects: 2, icon: <Smartphone />, color: "text-sky-400", gradient: "from-sky-400 to-blue-600" }, { name: "Node.js", projects: 2, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Blade", projects: 2, icon: <FileCode />, color: "text-red-400", gradient: "from-red-400 to-orange-500" }, { name: "Spring Boot", projects: 1, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-700" }, { name: "Flask", projects: 1, icon: <Server />, color: "text-gray-300", gradient: "from-gray-300 to-gray-500" }, { name: "JWT", projects: 1, icon: <Lock />, color: "text-yellow-500", gradient: "from-yellow-500 to-amber-600" }, { name: "jQuery", projects: 1, icon: <FileJson />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-500" }, ], "Architecture & Conception": [ { name: "UML", projects: 8, icon: <Activity />, color: "text-yellow-600", gradient: "from-yellow-600 to-amber-700" }, { name: "MVC", projects: "5+", icon: <Layers />, color: "text-indigo-500", gradient: "from-indigo-500 to-purple-600" }, { name: "SOLID", projects: 5, icon: <ShieldCheck />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" }, { name: "MVVM", projects: "4+", icon: <Smartphone />, color: "text-rose-500", gradient: "from-rose-500 to-pink-600" }, { name: "Clean Code", projects: 3, icon: <Sparkles />, color: "text-teal-500", gradient: "from-teal-500 to-emerald-600" }, { name: "TDD", projects: 2, icon: <CheckCircle2 />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, ], "Données & Stockage": [ { name: "MySQL", projects: 6, icon: <Database />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" }, { name: "phpMyAdmin", projects: 4, icon: <Settings />, color: "text-orange-300", gradient: "from-orange-300 to-yellow-500" }, { name: "PostgreSQL", projects: 3, icon: <Database />, color: "text-indigo-400", gradient: "from-indigo-400 to-blue-500" }, { name: "SQLite", projects: 2, icon: <HardDrive />, color: "text-sky-400", gradient: "from-sky-400 to-blue-500" }, { name: "Firebase", projects: 2, icon: <Cloud />, color: "text-yellow-500", gradient: "from-yellow-500 to-orange-600" }, { name: "MongoDB", projects: 1, icon: <Database />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Redis", projects: 1, icon: <Database />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, ], "DevOps, Outils & Serveurs": [ { name: "Git / GitHub", projects: 12, icon: <GitBranch />, color: "text-orange-600", gradient: "from-orange-600 to-red-600" }, { name: "Linux", projects: 8, icon: <Terminal />, color: "text-yellow-300", gradient: "from-yellow-300 to-amber-500" }, { name: "Maven", projects: 4, icon: <Wrench />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "Jira / Freedcamp", projects: 3, icon: <Layout />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" }, { name: "VirtualBox", projects: 3, icon: <Box />, color: "text-blue-300", gradient: "from-blue-300 to-indigo-400" }, { name: "GitLab", projects: 2, icon: <GitBranch />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Docker", projects: 2, icon: <Box />, color: "text-blue-500", gradient: "from-blue-500 to-indigo-600" }, { name: "Composer", projects: 2, icon: <Box />, color: "text-amber-600", gradient: "from-amber-600 to-orange-700" }, { name: "Postman", projects: 2, icon: <Send />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Vagrant", projects: 2, icon: <Box />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "Figma / Readdy", projects: 2, icon: <Layout />, color: "text-purple-400", gradient: "from-purple-400 to-pink-500" }, { name: "Jenkins", projects: 1, icon: <Settings />, color: "text-red-300", gradient: "from-red-300 to-orange-400" }, { name: "Nginx", projects: 1, icon: <Server />, color: "text-green-400", gradient: "from-green-400 to-emerald-500" }, { name: "Apache Tomcat", projects: 1, icon: <Server />, color: "text-yellow-600", gradient: "from-yellow-600 to-orange-700" }, ], "IDE & Productivité": [ { name: "VS Code", projects: 12, icon: <Monitor />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "IntelliJ IDEA", projects: 10, icon: <Monitor />, color: "text-purple-500", gradient: "from-purple-500 to-pink-600" }, { name: "Prompt IA", projects: 7, icon: <Sparkles />, color: "text-fuchsia-400", gradient: "from-fuchsia-400 to-purple-600" }, { name: "NetBeans", projects: 2, icon: <Layout />, color: "text-teal-400", gradient: "from-teal-400 to-green-500" }, { name: "Xcode", projects: 1, icon: <Monitor />, color: "text-blue-300", gradient: "from-blue-300 to-sky-400" }, ] };
 
   return (
     <div className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} font-sans overflow-x-hidden transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200`}>
@@ -691,6 +636,328 @@ const App = () => {
           )}
         </AnimatePresence>
       </nav>
+
+      {/* --- HERO SECTION --- */}
+      <SectionWrapper id="accueil" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <ParticleBackground isDarkMode={isDarkMode} />
+        <motion.div className="absolute top-20 right-0 w-96 h-96 bg-teal-600/20 rounded-full blur-[120px]" animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
+        <motion.div className="absolute bottom-0 left-0 w-72 h-72 bg-cyan-500/10 rounded-full blur-[100px]" animate={{ scale: [1, 1.5, 1], y: [0, -50, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
+
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+          <TiltCard className="p-4">
+            <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0, transition: { staggerChildren: 0.1 } } }}>
+              <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-teal-500 font-bold mb-4 tracking-widest uppercase text-sm border-l-4 border-teal-500 pl-3">
+                Portfolio 2025
+              </motion.p>
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-5xl md:text-8xl font-black mb-6 leading-tight tracking-tighter">
+                <span className={themeClasses.text}>Mohamed</span> <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-500 to-teal-600 animate-gradient-x">Kosbar</span>
+              </motion.h1>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className={`${themeClasses.textMuted} text-xl mb-8 max-w-lg leading-relaxed h-16 font-light`}>
+                 <Typewriter text={["Conception d'Architectures Web & Mobiles.", "Spécialisé en Java, React & DevOps.", "Disponible pour un stage de 14 semaines."]} />            
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row gap-6">
+                <a href="#projets" className={`px-8 py-4 font-bold rounded-full transition-all text-center flex items-center justify-center gap-2 hover:scale-105 active:scale-95 shadow-xl shadow-teal-500/20 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>
+                   Explorer <ArrowRight className="w-4 h-4" />
+                </a>
+                <div className="flex gap-4 items-center justify-center sm:justify-start px-4">
+                  <a href="https://github.com/DevKosX" target="_blank" className="hover:scale-125 transition-transform"><Github className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
+                  <a href="https://www.linkedin.com/in/mohamed-kosbar-5a57972ba/" target="_blank" className="hover:scale-125 transition-transform"><Linkedin className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
+                </div>
+              </motion.div>
+            </motion.div>
+          </TiltCard>
+
+          <TiltCard className="relative flex justify-center mt-8 lg:mt-0">
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className={`w-64 h-64 md:w-96 md:h-96 rounded-full border border-teal-500/30 border-dashed absolute`} />
+             <motion.div animate={{ rotate: -360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className={`w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full border border-cyan-500/20 absolute`} />
+            <div className={`w-64 h-64 md:w-80 md:h-80 bg-gradient-to-tr from-teal-500/20 to-cyan-600/20 rounded-full border ${themeClasses.navBorder} backdrop-blur-3xl flex items-center justify-center shadow-2xl shadow-teal-500/20 relative z-10`}>
+              <div className={`w-2/3 h-2/3 ${isDarkMode ? 'bg-black/80' : 'bg-white/80'} rounded-full flex items-center justify-center border ${isDarkMode ? 'border-white/5' : 'border-black/5'} relative`}>
+                <Code2 className="w-20 h-20 text-teal-500" />
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="absolute inset-0">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black p-2 rounded-full border border-teal-500"><Database className="w-4 h-4 text-teal-500"/></div>
+                </motion.div>
+                <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="absolute inset-4">
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-black p-2 rounded-full border border-purple-500"><Cpu className="w-4 h-4 text-purple-500"/></div>
+                </motion.div>
+              </div>
+            </div>
+          </TiltCard>
+        </div>
+      </SectionWrapper>
+
+      {/* --- A PROPOS (IDENTITÉ DÉTECTÉE - SCANNER UNIQUE) --- */}
+      <SectionWrapper id="about" className={`min-h-screen flex items-center py-24 ${themeClasses.sectionBgAlt} transition-colors duration-300 relative overflow-hidden`}>
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-16 relative">
+            <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} className="absolute -top-10 left-1/2 -translate-x-1/2 text-teal-500/20"><ScanLine className="w-32 h-32" /></motion.div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 relative z-10">
+              <span className={themeClasses.text}>Identité</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Détectée</span>
+            </h2>
+            <div className={`flex items-center justify-center gap-2 ${scanComplete ? 'text-green-500' : 'text-teal-500'} font-mono text-sm`}>
+                <span className={!scanComplete ? "animate-pulse" : ""}>●</span> {scanComplete ? "IDENTITÉ CONFIRMÉ" : "SCAN EN COURS..."}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <TiltCard className="relative group">
+              {/* Card Container - Border change on success */}
+              <motion.div 
+                onViewportEnter={() => setTimeout(() => setScanComplete(true), 2500)} // Le scan dure 2.5s
+                className={`relative h-full ${isDarkMode ? 'bg-[#0a0a0a]/90' : 'bg-white/90'} backdrop-blur-xl p-8 rounded-3xl border flex flex-col items-center text-center overflow-hidden transition-colors duration-700`}
+                style={{ borderColor: scanComplete ? 'rgba(34, 197, 94, 0.5)' : 'rgba(20, 184, 166, 0.2)' }}
+              >
+                {/* HUD Corners */}
+                <div className={`absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 ${scanComplete ? 'border-green-500' : 'border-teal-500'} transition-colors duration-700`} />
+                <div className={`absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 ${scanComplete ? 'border-green-500' : 'border-teal-500'} transition-colors duration-700`} />
+                <div className={`absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 ${scanComplete ? 'border-green-500' : 'border-teal-500'} transition-colors duration-700`} />
+                <div className={`absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 ${scanComplete ? 'border-green-500' : 'border-teal-500'} transition-colors duration-700`} />
+
+                {/* Avatar with Scanner Effect */}
+                <div className="relative w-48 h-48 mb-6">
+                  {!scanComplete && (
+                    <>
+                      <div className="absolute inset-0 rounded-full border-2 border-teal-500/30 animate-[spin_10s_linear_infinite]" />
+                      <div className="absolute inset-2 rounded-full border-2 border-cyan-500/30 animate-[spin_15s_linear_infinite_reverse]" />
+                    </>
+                  )}
+                  {scanComplete && (
+                     <motion.div initial={{ scale: 1.2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="absolute inset-0 rounded-full border-4 border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.5)] z-20" />
+                  )}
+                  
+                  <div className="w-full h-full rounded-full overflow-hidden border-4 border-gray-800 shadow-2xl relative">
+                    {/* Image starts grayscale, becomes color on success */}
+                    <img 
+                        src="/images/tiit.jpg" 
+                        alt="Avatar" 
+                        className={`w-full h-full object-cover transition-all duration-1000 ${scanComplete ? 'grayscale-0' : 'grayscale'}`} 
+                        onError={(e) => { e.target.style.display='none'; e.target.parentNode.style.backgroundColor='#1a1a1a'; }} 
+                    />
+                    
+                    {/* Scanning Line - Only shows if scan NOT complete */}
+                    {!scanComplete && (
+                        <motion.div 
+                            className="absolute w-full h-1 bg-teal-400 shadow-[0_0_15px_rgba(45,212,191,0.8)]"
+                            animate={{ top: ['0%', '100%', '0%'] }}
+                            transition={{ duration: 2, ease: "linear", repeat: Infinity }}
+                        />
+                    )}
+                  </div>
+                  
+                  {scanComplete && (
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute bottom-2 right-2 bg-green-500 text-white p-1 rounded-full z-30 shadow-lg border-2 border-black">
+                          <Check className="w-4 h-4" />
+                      </motion.div>
+                  )}
+                </div>
+
+                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-1 tracking-wide`}>Mohamed Kosbar</h3>
+                <p className={`${scanComplete ? 'text-green-500' : 'text-teal-500'} font-mono text-sm mb-6 flex items-center gap-2 transition-colors duration-500`}>
+                    <Fingerprint className="w-4 h-4" /> Développeur Full-Stack
+                </p>
+                
+                {/* HUD Data Grid */}
+                <div className="grid grid-cols-2 gap-4 w-full mb-8">
+                  <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} border border-white/10`}>
+                    <div className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Experience</div>
+                    <div className={`text-xl font-bold ${themeClasses.text}`}>3 Ans</div>
+                  </div>
+                  <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} border border-white/10`}>
+                    <div className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Status</div>
+                    <div className="text-xl font-bold text-green-500 flex items-center justify-center gap-2">
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"/> Online
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-full text-left">
+                  <div className={`flex items-center justify-between text-xs ${scanComplete ? 'text-green-500' : 'text-teal-500'} mb-1 font-mono transition-colors duration-500`}>
+                      <span>INTÉGRÉ AU SYSTÈME</span><span>100%</span>
+                  </div>
+                  <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
+                      <div className={`h-full bg-gradient-to-r ${scanComplete ? 'from-green-600 to-green-400' : 'from-teal-500 to-cyan-400'} w-full transition-colors duration-500`} />
+                  </div>
+                </div>
+              </motion.div>
+            </TiltCard>
+
+            <div className="lg:col-span-2 space-y-6">
+              {[
+                  { icon: <GraduationCap />, title: "Formation Académique", text: "Actuellement en 3ème année de BUT Informatique. Parcours axé sur l'architecture logicielle, l'algorithmique complexe et les bases de données." },
+                  { icon: <BrainCircuit />, title: "Vision & Approche", text: "Polyvalence Backend (Java, PHP, Postgres) & Frontend (React, Tailwind). Approche centrée sur la qualité (Clean Code, SOLID) et l'UX." },
+                  { icon: <Rocket />, title: "Mission Actuelle", text: "À la recherche d'un stage de 14 à 16 semaines. Prêt à intégrer une équipe et apporter une valeur ajoutée immédiate." }
+              ].map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ x: 50, opacity: 0 }} 
+                    whileInView={{ x: 0, opacity: 1 }} 
+                    viewport={{ once: true }} 
+                    transition={{ delay: idx * 0.15 }} 
+                    className={`relative p-6 rounded-2xl border ${themeClasses.cardBorder} ${isDarkMode ? 'bg-[#0a0a0a]/60' : 'bg-white/60'} backdrop-blur-md hover:border-teal-500/50 transition-all group overflow-hidden`}
+                  >
+                    <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-150 duration-500">{item.icon}</div>
+                    <div className="flex items-start gap-4 relative z-10">
+                        <div className="p-3 rounded-xl bg-teal-500/10 text-teal-500 group-hover:bg-teal-500/20 transition-colors">{item.icon}</div>
+                        <div>
+                            <h4 className={`text-xl font-bold ${themeClasses.text} mb-2`}>{item.title}</h4>
+                            <p className={`${themeClasses.textMuted} leading-relaxed`}>{item.text}</p>
+                        </div>
+                    </div>
+                  </motion.div>
+              ))}
+
+              <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }} className="flex flex-wrap gap-3 pt-2">
+                {["Curiosité", "Travail d'équipe", "Rigueur", "Autonomie", "Leader", "Clean Code", "Adaptabilité"].map((skill, idx) => (
+                  <span key={idx} className={`px-4 py-2 rounded-full text-xs font-bold font-mono border ${isDarkMode ? 'bg-teal-900/20 border-teal-500/30 text-teal-300 hover:bg-teal-900/40' : 'bg-teal-50 border-teal-200 text-teal-700'} transition-all cursor-crosshair flex items-center gap-2 hover:scale-105`}>
+                    <Crosshair className="w-3 h-3" />{skill}
+                  </span>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </SectionWrapper>
+
+      {/* --- DASHBOARD (PARCOURS AVEC DRAWER) --- */}
+      <SectionWrapper id="dashboard" className={`py-32 ${themeClasses.sectionBgAlt} relative overflow-hidden`}>
+         <div className="max-w-7xl mx-auto px-6 relative z-10">
+           <div className="text-center mb-16">
+             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/10 border border-teal-500/20 mb-6">
+               <Calendar className="w-4 h-4 text-teal-500" />
+               <span className="text-xs font-bold text-teal-600 uppercase tracking-widest">Chronologie</span>
+             </div>
+             <h2 className="text-4xl md:text-5xl font-extrabold mb-16 tracking-tight">
+               <span className={themeClasses.text}>Mon</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Parcours</span>
+             </h2>
+           </div>
+
+           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+             <div className="lg:col-span-7 space-y-8">
+               {experiencesData.map((item, index) => (
+                 <motion.div 
+                    key={index} 
+                    initial={{ opacity: 0, x: -50 }} 
+                    whileInView={{ opacity: 1, x: 0 }} 
+                    viewport={{ once: true, margin: "-50px" }} 
+                    transition={{ duration: 0.5, delay: index * 0.1 }} 
+                    className={`relative group pl-8 lg:pl-0 flex flex-col lg:flex-row gap-6 items-center cursor-pointer`}
+                    onClick={() => setSelectedExperience(item)} 
+                 >
+                   <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-800 lg:hidden" />
+                   {/* Interactive Dot */}
+                   <div className={`relative z-10 w-16 h-16 rounded-2xl ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} border border-gray-700 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:border-teal-500 transition-all duration-300`}>
+                     <div className={`p-3 rounded-xl bg-opacity-10 bg-current ${item.color}`}><div className={item.color}>{item.icon}</div></div>
+                     <div className="absolute inset-0 rounded-2xl border border-teal-500/0 group-hover:border-teal-500/50 group-hover:animate-ping opacity-20"></div>
+                   </div>
+                   
+                   <div className={`flex-1 w-full ${themeClasses.cardBg} p-6 rounded-2xl border ${themeClasses.cardBorder} hover:border-teal-500/30 transition-all shadow-lg group-hover:shadow-teal-500/10 group-hover:-translate-y-1`}>
+                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                       <h4 className={`text-xl font-bold ${themeClasses.text} group-hover:text-teal-400 transition-colors`}>{item.title}</h4>
+                       <span className="text-xs font-mono py-1 px-2 rounded bg-gray-800 text-gray-400 border border-gray-700 mt-2 sm:mt-0 w-fit">{item.date}</span>
+                     </div>
+                     <p className={`${themeClasses.text} text-sm font-semibold mb-2`}>{item.company}</p>
+                     <p className={themeClasses.textMuted}>{item.desc}</p>
+                     <div className="mt-4 flex items-center gap-2 text-xs font-bold text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                        Voir les détails <ArrowRight className="w-3 h-3" />
+                     </div>
+                   </div>
+                 </motion.div>
+               ))}
+             </div>
+             
+             {/* Stats Sticky */}
+             <div className="lg:col-span-5 lg:sticky lg:top-32">
+                <div className="grid grid-cols-2 gap-4">
+                   {stats.map((stat, idx) => (
+                     <motion.div key={idx} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} p-6 rounded-3xl flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors aspect-square shadow-xl backdrop-blur-sm group hover:border-teal-500/20`}>
+                       <div className={`mb-3 ${stat.icon.props.className.includes('text-') ? stat.icon.props.className : 'text-gray-400'} group-hover:scale-110 transition-transform`}>{stat.icon}</div>
+                       <h4 className={`text-3xl lg:text-4xl font-black ${themeClasses.text} mb-1`}><AnimatedCounter value={stat.value} /></h4>
+                       <p className={`text-xs font-bold uppercase tracking-wider ${themeClasses.textMuted}`}>{stat.label}</p>
+                     </motion.div>
+                   ))}
+                </div>
+             </div>
+           </div>
+         </div>
+      </SectionWrapper>
+
+      {/* --- MODALE EXPERIENCE (DRAWER/SIDE PANEL) --- */}
+      <AnimatePresence>
+        {selectedExperience && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+              onClick={() => setSelectedExperience(null)}
+            />
+            <motion.div 
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className={`fixed top-0 right-0 h-full w-full md:w-[600px] z-[70] ${isDarkMode ? 'bg-[#0f0f0f]/95' : 'bg-white/95'} backdrop-blur-xl border-l ${themeClasses.cardBorder} shadow-2xl overflow-y-auto`}
+            >
+              <div className="p-8">
+                <button onClick={() => setSelectedExperience(null)} className="mb-8 flex items-center gap-2 text-teal-500 font-bold hover:underline">
+                    <ArrowRight className="w-5 h-5 rotate-180" /> Retour
+                </button>
+                
+                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+                    <div className={`w-16 h-16 rounded-2xl ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center mb-6 shadow-lg shadow-teal-500/10`}>
+                        <div className={selectedExperience.color}>{selectedExperience.icon}</div>
+                    </div>
+                    <h2 className="text-4xl font-extrabold mb-2 leading-tight">{selectedExperience.title}</h2>
+                    <p className={`${themeClasses.text} text-xl font-medium mb-1`}>{selectedExperience.company}</p>
+                    <p className="text-teal-500 font-mono mb-6">{selectedExperience.date}</p>
+                    
+                    <div className="h-1 w-20 bg-gradient-to-r from-teal-500 to-cyan-500 mb-8 rounded-full" />
+                    
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Eye className="w-5 h-5 text-purple-500" /> Détails de l'expérience</h3>
+                    <p className={`${themeClasses.textMuted} text-lg leading-relaxed mb-8`}>
+                        {selectedExperience.fullDesc}
+                    </p>
+
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Sparkles className="w-5 h-5 text-yellow-500" /> Compétences Acquises</h3>
+                    <div className="flex flex-wrap gap-3 mb-10">
+                        {selectedExperience.skills.map(s => (
+                            <span key={s} className="px-3 py-1 bg-teal-500/10 text-teal-500 border border-teal-500/20 rounded-full text-sm font-bold">
+                                {s}
+                            </span>
+                        ))}
+                    </div>
+
+                    {selectedExperience.realizations && (
+                      <div className="mb-10">
+                        <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-green-500" /> Réalisations Clés</h3>
+                        <ul className="space-y-3">
+                          {selectedExperience.realizations.map((real, idx) => (
+                            <li key={idx} className="flex items-start gap-3">
+                              <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mt-2 shrink-0" />
+                              <span className={themeClasses.textMuted}>{real}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {selectedExperience.images && selectedExperience.images.length > 0 && (
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><ZoomIn className="w-5 h-5 text-blue-500" /> Galerie</h3>
+                            <div className="grid grid-cols-1 gap-4">
+                                {selectedExperience.images.map((img, idx) => (
+                                    <div key={idx} className="rounded-xl overflow-hidden border border-white/10 group">
+                                        <img src={img} alt="Experience" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500" onError={(e) => e.target.style.display='none'} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </motion.div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* --- MODALE PROJETS (POPUP) --- */}
       <AnimatePresence>
@@ -797,214 +1064,6 @@ const App = () => {
         )}
       </AnimatePresence>
 
-      {/* --- MODALE EXPERIENCE (DRAWER/SIDE PANEL) --- */}
-      <AnimatePresence>
-        {selectedExperience && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
-              onClick={() => setSelectedExperience(null)}
-            />
-            <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className={`fixed top-0 right-0 h-full w-full md:w-[600px] z-[70] ${isDarkMode ? 'bg-[#0f0f0f]/95' : 'bg-white/95'} backdrop-blur-xl border-l ${themeClasses.cardBorder} shadow-2xl overflow-y-auto`}
-            >
-              <div className="p-8">
-                <button onClick={() => setSelectedExperience(null)} className="mb-8 flex items-center gap-2 text-teal-500 font-bold hover:underline">
-                    <ArrowRight className="w-5 h-5 rotate-180" /> Retour
-                </button>
-                
-                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
-                    <div className={`w-16 h-16 rounded-2xl ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center mb-6`}>
-                        <div className={selectedExperience.color}>{selectedExperience.icon}</div>
-                    </div>
-                    <h2 className="text-4xl font-extrabold mb-2 leading-tight">{selectedExperience.title}</h2>
-                    <p className="text-teal-500 font-mono mb-6">{selectedExperience.date}</p>
-                    
-                    <div className="h-1 w-20 bg-gradient-to-r from-teal-500 to-cyan-500 mb-8 rounded-full" />
-                    
-                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Eye className="w-5 h-5 text-purple-500" /> Détails de l'expérience</h3>
-                    <p className={`${themeClasses.textMuted} text-lg leading-relaxed mb-8`}>
-                        {selectedExperience.fullDesc}
-                    </p>
-
-                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Sparkles className="w-5 h-5 text-yellow-500" /> Compétences Acquises</h3>
-                    <div className="flex flex-wrap gap-3 mb-10">
-                        {selectedExperience.skills.map(s => (
-                            <span key={s} className="px-3 py-1 bg-teal-500/10 text-teal-500 border border-teal-500/20 rounded-full text-sm font-bold">
-                                {s}
-                            </span>
-                        ))}
-                    </div>
-
-                    {selectedExperience.images && selectedExperience.images.length > 0 && (
-                        <div className="space-y-4">
-                            <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><ZoomIn className="w-5 h-5 text-blue-500" /> Galerie</h3>
-                            <div className="grid grid-cols-1 gap-4">
-                                {selectedExperience.images.map((img, idx) => (
-                                    <div key={idx} className="rounded-xl overflow-hidden border border-white/10 group">
-                                        <img src={img} alt="Experience" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500" onError={(e) => e.target.style.display='none'} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </motion.div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* --- HERO SECTION (INSANE BACKGROUND) --- */}
-      <SectionWrapper id="accueil" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        {/* ANIMATED PARTICLES BACKGROUND */}
-        <ParticleBackground isDarkMode={isDarkMode} />
-        
-        {/* Abstract Blobs */}
-        <motion.div 
-          className="absolute top-20 right-0 w-96 h-96 bg-teal-600/20 rounded-full blur-[120px]"
-          animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute bottom-0 left-0 w-72 h-72 bg-cyan-500/10 rounded-full blur-[100px]"
-          animate={{ scale: [1, 1.5, 1], y: [0, -50, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-          <TiltCard className="p-4">
-            <motion.div 
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0, x: -50 },
-                visible: { 
-                  opacity: 1, 
-                  x: 0,
-                  transition: { staggerChildren: 0.1 } 
-                }
-              }}
-            >
-              <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-teal-500 font-bold mb-4 tracking-widest uppercase text-sm border-l-4 border-teal-500 pl-3">
-                Portfolio 2025
-              </motion.p>
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-5xl md:text-8xl font-black mb-6 leading-tight tracking-tighter">
-                <span className={themeClasses.text}>Mohamed</span> <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-500 to-teal-600 animate-gradient-x">Kosbar</span>
-              </motion.h1>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className={`${themeClasses.textMuted} text-xl mb-8 max-w-lg leading-relaxed h-16 font-light`}>
-                 <Typewriter text={[
-                   "Conception d'Architectures Web & Mobiles.", 
-                   "Spécialisé en Java, React & DevOps.", 
-                   "Disponible pour un stage de 14 semaines."
-                 ]} />            
-              </motion.div>
-              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row gap-6">
-                <a href="#projets" className={`px-8 py-4 font-bold rounded-full transition-all text-center flex items-center justify-center gap-2 hover:scale-105 active:scale-95 shadow-xl shadow-teal-500/20 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>
-                   Explorer <ArrowRight className="w-4 h-4" />
-                </a>
-                <div className="flex gap-4 items-center justify-center sm:justify-start px-4">
-                  <a href="https://github.com/DevKosX" target="_blank" className="hover:scale-125 transition-transform"><Github className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
-                  <a href="https://www.linkedin.com/in/mohamed-kosbar-5a57972ba/" target="_blank" className="hover:scale-125 transition-transform"><Linkedin className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
-                </div>
-              </motion.div>
-            </motion.div>
-          </TiltCard>
-
-          <TiltCard className="relative flex justify-center mt-8 lg:mt-0">
-            <motion.div 
-               animate={{ rotate: 360 }}
-               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-               className={`w-64 h-64 md:w-96 md:h-96 rounded-full border border-teal-500/30 border-dashed absolute`}
-            />
-             <motion.div 
-               animate={{ rotate: -360 }}
-               transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-               className={`w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full border border-cyan-500/20 absolute`}
-            />
-            <div className={`w-64 h-64 md:w-80 md:h-80 bg-gradient-to-tr from-teal-500/20 to-cyan-600/20 rounded-full border ${themeClasses.navBorder} backdrop-blur-3xl flex items-center justify-center shadow-2xl shadow-teal-500/20 relative z-10`}>
-              <div className={`w-2/3 h-2/3 ${isDarkMode ? 'bg-black/80' : 'bg-white/80'} rounded-full flex items-center justify-center border ${isDarkMode ? 'border-white/5' : 'border-black/5'} relative`}>
-                <Code2 className="w-20 h-20 text-teal-500" />
-                {/* Orbiting Icons */}
-                <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="absolute inset-0">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black p-2 rounded-full border border-teal-500"><Database className="w-4 h-4 text-teal-500"/></div>
-                </motion.div>
-                <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="absolute inset-4">
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-black p-2 rounded-full border border-purple-500"><Cpu className="w-4 h-4 text-purple-500"/></div>
-                </motion.div>
-              </div>
-            </div>
-          </TiltCard>
-        </div>
-      </SectionWrapper>
-
-      {/* --- DASHBOARD (PARCOURS AVEC DRAWER) --- */}
-      <SectionWrapper id="dashboard" className={`py-32 ${themeClasses.sectionBgAlt} relative overflow-hidden`}>
-         <div className="max-w-7xl mx-auto px-6 relative z-10">
-           <div className="text-center mb-16">
-             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/10 border border-teal-500/20 mb-6">
-               <Calendar className="w-4 h-4 text-teal-500" />
-               <span className="text-xs font-bold text-teal-600 uppercase tracking-widest">Chronologie</span>
-             </div>
-             <h2 className="text-4xl md:text-5xl font-extrabold mb-16 tracking-tight">
-               <span className={themeClasses.text}>Mon</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Parcours</span>
-             </h2>
-           </div>
-
-           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-             <div className="lg:col-span-7 space-y-8">
-               {experiencesData.map((item, index) => (
-                 <motion.div 
-                    key={index} 
-                    initial={{ opacity: 0, x: -50 }} 
-                    whileInView={{ opacity: 1, x: 0 }} 
-                    viewport={{ once: true, margin: "-50px" }} 
-                    transition={{ duration: 0.5, delay: index * 0.1 }} 
-                    className={`relative group pl-8 lg:pl-0 flex flex-col lg:flex-row gap-6 items-center cursor-pointer`}
-                    onClick={() => setSelectedExperience(item)} // Ouvre le Drawer
-                 >
-                   <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-800 lg:hidden" />
-                   {/* Icon Box with Pulse */}
-                   <div className={`relative z-10 w-16 h-16 rounded-2xl ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} border border-gray-700 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:border-teal-500 transition-all duration-300`}>
-                     <div className={`p-3 rounded-xl bg-opacity-10 bg-current ${item.color}`}><div className={item.color}>{item.icon}</div></div>
-                     <div className="absolute inset-0 rounded-2xl border border-teal-500/0 group-hover:border-teal-500/50 group-hover:animate-ping opacity-20"></div>
-                   </div>
-                   
-                   {/* Card Content */}
-                   <div className={`flex-1 w-full ${themeClasses.cardBg} p-6 rounded-2xl border ${themeClasses.cardBorder} hover:border-teal-500/30 transition-all shadow-lg group-hover:shadow-teal-500/10 group-hover:-translate-y-1`}>
-                     <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
-                       <h4 className={`text-xl font-bold ${themeClasses.text} group-hover:text-teal-400 transition-colors`}>{item.title}</h4>
-                       <span className="text-xs font-mono py-1 px-2 rounded bg-gray-800 text-gray-400 border border-gray-700 mt-2 sm:mt-0 w-fit">{item.date}</span>
-                     </div>
-                     <p className={themeClasses.textMuted}>{item.desc}</p>
-                     <div className="mt-4 flex items-center gap-2 text-xs font-bold text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                        Voir les détails <ArrowRight className="w-3 h-3" />
-                     </div>
-                   </div>
-                 </motion.div>
-               ))}
-             </div>
-             <div className="lg:col-span-5 lg:sticky lg:top-32">
-                <div className="grid grid-cols-2 gap-4">
-                   {stats.map((stat, idx) => (
-                     <motion.div key={idx} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} p-6 rounded-3xl flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors aspect-square shadow-xl backdrop-blur-sm group hover:border-teal-500/20`}>
-                       <div className={`mb-3 ${stat.icon.props.className.includes('text-') ? stat.icon.props.className : 'text-gray-400'} group-hover:scale-110 transition-transform`}>{stat.icon}</div>
-                       <h4 className={`text-3xl lg:text-4xl font-black ${themeClasses.text} mb-1`}><AnimatedCounter value={stat.value} /></h4>
-                       <p className={`text-xs font-bold uppercase tracking-wider ${themeClasses.textMuted}`}>{stat.label}</p>
-                     </motion.div>
-                   ))}
-                </div>
-             </div>
-           </div>
-         </div>
-      </SectionWrapper>
-
       {/* --- PROJETS --- */}
       <SectionWrapper id="projets" className={`py-32 ${isDarkMode ? 'bg-[#080808]' : 'bg-gray-100'} transition-colors duration-300`}>
         <div className="max-w-7xl mx-auto px-6">
@@ -1086,197 +1145,113 @@ const App = () => {
         </div>
       </SectionWrapper>
 
-      {/* --- A PROPOS (AVEC TILT 3D) --- */}
-      <SectionWrapper id="about" className={`min-h-screen flex items-center py-24 ${themeClasses.sectionBgAlt} transition-colors duration-300 relative overflow-hidden`}>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
-
+      {/* --- PASSIONS --- */}
+      <SectionWrapper id="passions" className={`py-24 ${themeClasses.sectionBgDarker} relative overflow-hidden transition-colors duration-300`}>
         <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-              <span className={themeClasses.text}>Identité</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Détectée</span>
-            </h2>
-            <p className={`${themeClasses.textMuted} text-lg`}>Initialisation du profil développeur...</p>
-          </div>
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-16 text-center">
+            <span className={themeClasses.text}>Mes</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Passions</span> & Inspirations
+          </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <TiltCard className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000" />
-              <div className={`relative h-full ${isDarkMode ? 'bg-[#0a0a0a]/90' : 'bg-white/90'} backdrop-blur-xl p-8 rounded-3xl border ${themeClasses.cardBorder} flex flex-col items-center text-center`}>
-                <div className="relative w-48 h-48 mb-6 group-hover:scale-105 transition-transform duration-500">
-                  <div className="absolute inset-0 rounded-full border-2 border-teal-500/30 animate-[spin_10s_linear_infinite]" />
-                  <div className="absolute inset-2 rounded-full border-2 border-cyan-500/30 animate-[spin_15s_linear_infinite_reverse]" />
-                  <div className="w-full h-full rounded-full overflow-hidden border-4 border-gray-800 shadow-2xl relative">
-                    <img src="/images/tiit.jpg" alt="Avatar" className="w-full h-full object-cover" onError={(e) => { e.target.style.display='none'; e.target.parentNode.style.backgroundColor='#1a1a1a'; }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-teal-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full border border-white/10 shadow-lg">LVL. 3</div>
-                </div>
-                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-1`}>Mohamed Kosbar</h3>
-                <p className="text-teal-500 font-mono text-sm mb-6">Développeur Full-Stack</p>
-                <div className="grid grid-cols-2 gap-4 w-full mb-8">
-                  <div className={`p-3 rounded-xl ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} border ${themeClasses.cardBorder}`}>
-                    <div className="text-xs text-gray-500 uppercase font-bold">XP</div><div className={`text-lg font-bold ${themeClasses.text}`}>3 Ans</div>
-                  </div>
-                  <div className={`p-3 rounded-xl ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} border ${themeClasses.cardBorder}`}>
-                    <div className="text-xs text-gray-500 uppercase font-bold">Status</div><div className="text-lg font-bold text-green-500">Online</div>
+          <div className="mb-24">
+            <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}><Plane className="w-6 h-6 text-teal-500" /> Odyssée Culturelle</h3>
+            {!activeTrip && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-96 transition-all duration-500 ease-in-out">
+                <div onClick={() => setActiveTrip('egypt')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-amber-500/50 transition-all duration-300">
+                  <img src="/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
+                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines paternelles</span>
+                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Égypte</h4>
+                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Le Caire, Alexandrie & Marassi <ArrowRight className="w-4 h-4" /></p>
                   </div>
                 </div>
-                <div className="w-full">
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-1"><span>Motivation</span><span>100%</span></div>
-                  <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-teal-500 to-cyan-600 w-full animate-pulse" /></div>
+                <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
+                  <img src="/images/passions/casa.png" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
+                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines maternelles</span>
+                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Maroc</h4>
+                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Casa, Marrakech & Nador <ArrowRight className="w-4 h-4" /></p>
+                  </div>
                 </div>
               </div>
-            </TiltCard>
+            )}
+            {activeTrip && (
+              <div className={`relative w-full bg-slate-800 rounded-3xl overflow-hidden shadow-2xl border ${themeClasses.cardBorder} animate-in fade-in slide-in-from-bottom-10 duration-500`}>
+                <div className={`relative h-48 md:h-64 overflow-hidden`}>
+                  <img src={tripDetails[activeTrip].bgImage} className="w-full h-full object-cover opacity-40 blur-sm" onError={(e) => e.target.style.display='none'} />
+                  <div className={`absolute inset-0 bg-gradient-to-b ${tripDetails[activeTrip].color} opacity-60 mix-blend-multiply`} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                      <h3 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight drop-shadow-lg">{tripDetails[activeTrip].title}</h3>
+                      <p className="text-xl text-white/90 font-light italic">{tripDetails[activeTrip].subtitle}</p>
+                  </div>
+                  <button onClick={() => setActiveTrip(null)} className="absolute top-4 right-4 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white transition-all backdrop-blur-md z-20"><X className="w-6 h-6" /></button>
+                </div>
+                <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {tripDetails[activeTrip].locations.map((loc, idx) => (
+                      <div key={idx} className="group bg-slate-900/50 rounded-xl p-4 hover:bg-slate-900 transition-colors duration-300 border border-transparent hover:border-gray-700">
+                        <div className="h-40 w-full rounded-lg overflow-hidden mb-4 relative">
+                            <img src={loc.img} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onError={(e) => e.target.style.display='none'} />
+                            <div className={`absolute top-2 right-2 bg-black/70 p-1.5 rounded-lg text-white`}>{loc.icon}</div>
+                        </div>
+                        <h5 className={`text-xl font-bold ${tripDetails[activeTrip].accent} mb-2`}>{loc.name}</h5>
+                        <p className={`${themeClasses.textMuted} text-sm leading-relaxed`}>{loc.desc}</p>
+                      </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-green-500/30 transition-all shadow-md`}>
+               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-48 h-48 text-green-500" /></div>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><HeartPulse className="w-6 h-6 text-green-500" /> Le Football, une école de vie</h3>
+               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
+                 <p>Le football est bien plus qu'un sport pour moi. J'ai eu la chance d'atteindre un excellent niveau en évoluant en <span className={`${themeClasses.text} font-bold`}>U17 Nationaux avec Aubervilliers (Génération 2005)</span>. C'était l'école de la rigueur, de la tactique et du dépassement de soi.</p>
+                 <p>Malheureusement, une blessure (la maladie d'Osgood-Schlatter) a freiné cette ascension. Mais cette épreuve m'a appris la résilience. J'ai transféré cette compétitivité et cette soif d'apprendre dans mes études et le développement informatique. Aujourd'hui, je code avec la même intensité que je jouais sur le terrain.</p>
+               </div>
+            </div>
+            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-red-500/30 transition-all shadow-md`}>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Tv className="w-6 h-6 text-red-500" /> Cinéphile</h3>
+               <div className="space-y-6">
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/st.jpg" alt="Stranger Things" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-red-500 transition-colors`}>Stranger Things</h4><p className={`text-xs ${themeClasses.textMuted}`}>Mystère & Années 80</p></div>
+                 </div>
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/echo.webp" alt="Echoes of the Past" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-yellow-500 transition-colors`}>Echoes of the Past</h4><p className={`text-xs ${themeClasses.textMuted}`}>Drame Égyptien</p></div>
+                 </div>
+               </div>
+            </div>
+          </div>
 
-            <div className="lg:col-span-2 space-y-6">
-              <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className={`p-6 rounded-2xl border ${themeClasses.cardBorder} ${isDarkMode ? 'bg-[#0a0a0a]/60' : 'bg-white/60'} backdrop-blur-md hover:border-teal-500/30 transition-colors group`}>
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-xl bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20 transition-colors"><GraduationCap className="w-6 h-6" /></div>
-                  <div>
-                    <h4 className={`text-xl font-bold ${themeClasses.text} mb-2`}>Formation Académique</h4>
-                    <p className={`${themeClasses.textMuted} leading-relaxed`}>Actuellement en <span className="text-teal-500 font-bold">3ème année de BUT Informatique</span>. Mon parcours académique m'a permis de construire des fondations solides en architecture logicielle, algorithmique complexe et gestion de bases de données.</p>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className={`p-6 rounded-2xl border ${themeClasses.cardBorder} ${isDarkMode ? 'bg-[#0a0a0a]/60' : 'bg-white/60'} backdrop-blur-md hover:border-purple-500/30 transition-colors group`}>
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-xl bg-purple-500/10 text-purple-400 group-hover:bg-purple-500/20 transition-colors"><BrainCircuit className="w-6 h-6" /></div>
-                  <div>
-                    <h4 className={`text-xl font-bold ${themeClasses.text} mb-2`}>Vision & Approche</h4>
-                    <p className={`${themeClasses.textMuted} leading-relaxed`}>Je navigue avec aisance entre le Backend (Java, PHP, Postgres) et le Frontend (React, Tailwind). Mon approche est centrée sur la qualité (Clean Code, SOLID) et l'expérience utilisateur.</p>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className={`p-6 rounded-2xl border ${themeClasses.cardBorder} ${isDarkMode ? 'bg-gradient-to-r from-teal-900/10 to-cyan-900/10' : 'bg-blue-50'} backdrop-blur-md border-teal-500/20 hover:border-teal-500/50 transition-colors group relative overflow-hidden`}>
-                <div className="absolute top-0 right-0 p-4 opacity-10"><Rocket className="w-24 h-24 text-teal-500 rotate-45" /></div>
-                <div className="flex items-start gap-4 relative z-10">
-                  <div className="p-3 rounded-xl bg-teal-500/10 text-teal-500 group-hover:bg-teal-500/20 transition-colors animate-pulse"><Rocket className="w-6 h-6" /></div>
-                  <div>
-                    <h4 className={`text-xl font-bold ${themeClasses.text} mb-2`}>Mission Actuelle</h4>
-                    <p className={`${themeClasses.textMuted} leading-relaxed`}>À la recherche d'un <span className="text-teal-500 font-bold">stage de 14 à 16 semaines</span> pour valider mon année. Je suis prêt à intégrer votre équipe et apporter ma valeur ajoutée.</p>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="flex flex-wrap gap-3">
-                {["Curiosité", "Travail d'équipe", "Rigueur", "Autonomie", "Leader", "Clean Code", "Adaptabilité"].map((skill, idx) => (
-                  <span key={idx} className={`px-4 py-2 rounded-full text-sm font-bold border ${isDarkMode ? 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'} transition-colors cursor-default flex items-center gap-2 hover:scale-105 transform duration-200`}>
-                    <Sparkles className="w-3 h-3 text-yellow-500" />{skill}
-                  </span>
-                ))}
-              </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-teal-500/30 transition-all shadow-md`}>
+               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Waves className="w-48 h-48 text-teal-500" /></div>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Waves className="w-6 h-6 text-teal-500" /> La Natation, mon second souffle</h3>
+               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
+                 <p>De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité, des atouts majeurs pour mon jeu au football et c'est devenu une passion.</p>
+                 <p>Aujourd'hui, je nage partout : de l'Atlantique (Agadir, Deauville) à la Mer Rouge (Hurghada), en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée.</p>
+               </div>
+            </div>
+            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-purple-500/30 transition-all shadow-md`}>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Gamepad2 className="w-6 h-6 text-purple-500" /> Gamer</h3>
+               <div className="space-y-6">
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/fm.avif" alt="Football Manager" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-purple-500 transition-colors`}>Football Manager</h4><p className={`text-xs ${themeClasses.textMuted}`}>Stratégie & Gestion</p></div>
+                 </div>
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/last.jpg" alt="The Last of Us" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-green-500 transition-colors`}>The Last of Us</h4><p className={`text-xs ${themeClasses.textMuted}`}>Narratif & Émotion</p></div>
+                 </div>
+               </div>
             </div>
           </div>
         </div>
       </SectionWrapper>
-
-        {/* --- PASSIONS --- */}
-      <SectionWrapper id="passions" className={`py-24 ${themeClasses.sectionBgDarker} relative overflow-hidden transition-colors duration-300`}>
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-16 text-center">
-            <span className={themeClasses.text}>Mes</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Passions</span> & Inspirations
-          </h2>
-
-          <div className="mb-24">
-            <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}><Plane className="w-6 h-6 text-teal-500" /> Odyssée Culturelle</h3>
-            {!activeTrip && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-96 transition-all duration-500 ease-in-out">
-                <div onClick={() => setActiveTrip('egypt')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-amber-500/50 transition-all duration-300">
-                  <img src="/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
-                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines paternelles</span>
-                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Égypte</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Le Caire, Alexandrie & Marassi <ArrowRight className="w-4 h-4" /></p>
-                  </div>
-                </div>
-                <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
-                  <img src="/images/passions/casa.png" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
-                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines maternelles</span>
-                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Maroc</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Casa, Marrakech & Nador <ArrowRight className="w-4 h-4" /></p>
-                  </div>
-                </div>
-              </div>
-            )}
-            {activeTrip && (
-              <div className={`relative w-full bg-slate-800 rounded-3xl overflow-hidden shadow-2xl border ${themeClasses.cardBorder} animate-in fade-in slide-in-from-bottom-10 duration-500`}>
-                <div className={`relative h-48 md:h-64 overflow-hidden`}>
-                  <img src={tripDetails[activeTrip].bgImage} className="w-full h-full object-cover opacity-40 blur-sm" onError={(e) => e.target.style.display='none'} />
-                  <div className={`absolute inset-0 bg-gradient-to-b ${tripDetails[activeTrip].color} opacity-60 mix-blend-multiply`} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                      <h3 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight drop-shadow-lg">{tripDetails[activeTrip].title}</h3>
-                      <p className="text-xl text-white/90 font-light italic">{tripDetails[activeTrip].subtitle}</p>
-                  </div>
-                  <button onClick={() => setActiveTrip(null)} className="absolute top-4 right-4 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white transition-all backdrop-blur-md z-20"><X className="w-6 h-6" /></button>
-                </div>
-                <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {tripDetails[activeTrip].locations.map((loc, idx) => (
-                      <div key={idx} className="group bg-slate-900/50 rounded-xl p-4 hover:bg-slate-900 transition-colors duration-300 border border-transparent hover:border-gray-700">
-                        <div className="h-40 w-full rounded-lg overflow-hidden mb-4 relative">
-                            <img src={loc.img} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onError={(e) => e.target.style.display='none'} />
-                            <div className={`absolute top-2 right-2 bg-black/70 p-1.5 rounded-lg text-white`}>{loc.icon}</div>
-                        </div>
-                        <h5 className={`text-xl font-bold ${tripDetails[activeTrip].accent} mb-2`}>{loc.name}</h5>
-                        <p className={`${themeClasses.textMuted} text-sm leading-relaxed`}>{loc.desc}</p>
-                      </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-green-500/30 transition-all shadow-md`}>
-               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-48 h-48 text-green-500" /></div>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><HeartPulse className="w-6 h-6 text-green-500" /> Le Football, une école de vie</h3>
-               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
-                 <p>Le football est bien plus qu'un sport pour moi. J'ai eu la chance d'atteindre un excellent niveau en évoluant en <span className={`${themeClasses.text} font-bold`}>U17 Nationaux avec Aubervilliers (Génération 2005)</span>. C'était l'école de la rigueur, de la tactique et du dépassement de soi.</p>
-                 <p>Malheureusement, une blessure (la maladie d'Osgood-Schlatter) a freiné cette ascension. Mais cette épreuve m'a appris la résilience. J'ai transféré cette compétitivité et cette soif d'apprendre dans mes études et le développement informatique. Aujourd'hui, je code avec la même intensité que je jouais sur le terrain.</p>
-               </div>
-            </div>
-            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-red-500/30 transition-all shadow-md`}>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Tv className="w-6 h-6 text-red-500" /> Cinéphile</h3>
-               <div className="space-y-6">
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/st.jpg" alt="Stranger Things" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-red-500 transition-colors`}>Stranger Things</h4><p className={`text-xs ${themeClasses.textMuted}`}>Mystère & Années 80</p></div>
-                 </div>
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/echo.webp" alt="Echoes of the Past" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-yellow-500 transition-colors`}>Echoes of the Past</h4><p className={`text-xs ${themeClasses.textMuted}`}>Drame Égyptien</p></div>
-                 </div>
-               </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-teal-500/30 transition-all shadow-md`}>
-               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Waves className="w-48 h-48 text-teal-500" /></div>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Waves className="w-6 h-6 text-teal-500" /> La Natation, mon second souffle</h3>
-               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
-                 <p>De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité, des atouts majeurs pour mon jeu au football et c'est devenu une passion.</p>
-                 <p>Aujourd'hui, je nage partout : de l'Atlantique (Agadir, Deauville) à la Mer Rouge (Hurghada), en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée.</p>
-               </div>
-            </div>
-            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-purple-500/30 transition-all shadow-md`}>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Gamepad2 className="w-6 h-6 text-purple-500" /> Gamer</h3>
-               <div className="space-y-6">
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/fm.avif" alt="Football Manager" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-purple-500 transition-colors`}>Football Manager</h4><p className={`text-xs ${themeClasses.textMuted}`}>Stratégie & Gestion</p></div>
-                 </div>
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/last.jpg" alt="The Last of Us" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-green-500 transition-colors`}>The Last of Us</h4><p className={`text-xs ${themeClasses.textMuted}`}>Narratif & Émotion</p></div>
-                 </div>
-               </div>
-            </div>
-          </div>
-        </div>
-      </SectionWrapper>
 
       {/* --- CONTACT --- */}
       <SectionWrapper id="contact" className={`py-32 ${themeClasses.sectionBgAlt} relative overflow-hidden`}>
