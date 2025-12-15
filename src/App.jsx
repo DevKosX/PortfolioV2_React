@@ -10,7 +10,7 @@ import {
   CheckCircle2, ArrowRight, Lock, Smartphone, Waves,
   Sparkles, Layout, GitBranch, Cloud, Calendar,
   Utensils, Activity, Signal, FileJson, Braces, HardDrive, Monitor, Wrench, Settings,
-  BrainCircuit, Rocket // J'ai ajouté ces deux-là qui manquaient pour la section À Propos
+  BrainCircuit, Rocket, SunMedium // J'ai ajouté ces deux-là qui manquaient pour la section À Propos
 } from 'lucide-react';
 
 
@@ -325,7 +325,7 @@ const App = () => {
       longDesc: "Digitalisation complète du processus de stage : conventions, signatures, rapports. Analyse fine des processus métiers de l'université.",
       features: ["Digitalisation métier", "PDF dynamique", "Notifications", "Dashboard stats"],
       tags: ["PHP", "HTML/CSS", "JS", "MVC"],
-      image: "/images/stagelys.png",
+      image: "/images/stago.jpg",
       github: "https://github.com/DevKosX/GestionDesStagesProject",
       icon: <Database className="w-10 h-10 text-teal-400" />
     },
@@ -460,7 +460,7 @@ const App = () => {
             className={`hidden md:flex items-center justify-center w-10 h-10 rounded-full ${isDarkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-200 hover:bg-gray-300'} transition-all`}
             title={isDarkMode ? "Passer en mode clair" : "Passer en mode sombre"}
           >
-            {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-teal-600" />}
+            {isDarkMode ? <SunMedium className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-teal-600" />}
           </button>
 
           <div className="md:hidden flex items-center gap-4">
