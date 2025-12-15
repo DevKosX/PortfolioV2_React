@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
-// --- TOUTES LES ICÔNES RASSEMBLÉES ICI ---
+// --- TOUTES LES ICÔNES ---
 import { 
   ShieldCheck, Box, GraduationCap, Github, Linkedin, Code2, Terminal, Database, Cpu, 
   Globe, Calculator, Layers, Server, Gamepad2, Plane, Trophy, 
@@ -10,9 +10,125 @@ import {
   CheckCircle2, ArrowRight, Lock, Smartphone, Waves,
   Sparkles, Layout, GitBranch, Cloud, Calendar,
   Utensils, Activity, Signal, FileJson, Braces, HardDrive, Monitor, Wrench, Settings,
-  BrainCircuit, Rocket, SunMedium // J'ai ajouté ces deux-là qui manquaient pour la section À Propos
+  BrainCircuit, Rocket, SunMedium, Eye, ZoomIn
 } from 'lucide-react';
 
+// --- 1. COMPOSANT CANVAS PARTICLES (HERO BACKGROUND) ---
+const ParticleBackground = ({ isDarkMode }) => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let width, height;
+    let particles = [];
+
+    const init = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      particles = [];
+      const numberOfParticles = width > 768 ? 100 : 50;
+      for (let i = 0; i < numberOfParticles; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 2 + 1,
+        });
+      }
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = isDarkMode ? 'rgba(20, 184, 166, 0.5)' : 'rgba(13, 148, 136, 0.5)';
+      
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Liaisons
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.strokeStyle = isDarkMode 
+              ? `rgba(20, 184, 166, ${0.2 - distance / 150})` 
+              : `rgba(13, 148, 136, ${0.2 - distance / 150})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      });
+      animationFrameId = requestAnimationFrame(draw);
+    };
+
+    window.addEventListener('resize', init);
+    init();
+    draw();
+
+    return () => {
+      window.removeEventListener('resize', init);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isDarkMode]);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0" />;
+};
+
+// --- 2. COMPOSANT TILT CARD (EFFET 3D) ---
+const TiltCard = ({ children, className }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
+  const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
+
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseXFromCenter = e.clientX - rect.left - width / 2;
+    const mouseYFromCenter = e.clientY - rect.top - height / 2;
+    x.set(mouseXFromCenter / width);
+    y.set(mouseYFromCenter / height);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className={`relative transition-all duration-200 ease-out ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 // --- COMPOSANT COMPTEUR ANIMÉ ---
 const AnimatedCounter = ({ value, duration = 2 }) => {
@@ -67,21 +183,30 @@ const SectionWrapper = ({ children, id, className }) => {
 const Typewriter = ({ text, delay = 100, infinite = true }) => {
   const [currentText, setCurrentText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeStringIndex, setActiveStringIndex] = useState(0);
+
+  // Gestion si text est un tableau ou une chaine
+  const strings = Array.isArray(text) ? text : [text];
 
   useEffect(() => {
     let timeout;
+    const currentString = strings[activeStringIndex];
 
-    if (currentIndex < text.length) {
+    if (currentIndex < currentString.length) {
       timeout = setTimeout(() => {
-        setCurrentText(prevText => prevText + text[currentIndex]);
-        setCurrentIndex(prevIndex => prevIndex + 1);
+        setCurrentText(prev => prev + currentString[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
       }, delay);
-    } else if (infinite) {
-      // Optional: Add logic to reset and loop if needed
+    } else if (infinite && strings.length > 1) {
+       timeout = setTimeout(() => {
+         setCurrentText('');
+         setCurrentIndex(0);
+         setActiveStringIndex(prev => (prev + 1) % strings.length);
+       }, 2000); // Pause avant la prochaine phrase
     }
 
     return () => clearTimeout(timeout);
-  }, [currentIndex, delay, infinite, text]);
+  }, [currentIndex, delay, infinite, strings, activeStringIndex]);
 
   return <span>{currentText}</span>;
 };
@@ -91,9 +216,10 @@ const App = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedExperience, setSelectedExperience] = useState(null); // Nouveau pour le Drawer
   const [activeTrip, setActiveTrip] = useState(null); 
   const [currentTime, setCurrentTime] = useState(new Date());
-  
+   
   // State pour le formulaire
   const [formStatus, setFormStatus] = useState('idle');
   const [formData, setFormData] = useState({
@@ -115,12 +241,12 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedProject) {
+    if (selectedProject || selectedExperience) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [selectedProject]);
+  }, [selectedProject, selectedExperience]);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -141,7 +267,6 @@ const App = () => {
     setFormStatus('sending');
 
     try {
-      // Ton ID est inséré ici 👇
       const response = await fetch("https://formspree.io/f/xqaroebl", {
         method: "POST",
         headers: {
@@ -171,6 +296,65 @@ const App = () => {
     }
   };
 
+  // --- DONNÉES PARCOURS AMÉLIORÉES ---
+  const experiencesData = [
+    { 
+        id: 1,
+        title: "Développeur Full-Stack", 
+        date: "2022 - Présent", 
+        desc: "3 ans d'expérience cumulée (académique & projets).", 
+        fullDesc: "Au cours de ces trois années, j'ai transformé ma passion en expertise technique. J'ai navigué sur des projets variés, allant d'applications mobiles Flutter complexes à des backends robustes en Java/Spring.",
+        skills: ["React", "Node.js", "Java", "Flutter", "DevOps"],
+        images: ["/images/frigo.webp", "/images/france-academy.png"],
+        icon: <Code2 />, 
+        color: "text-teal-500" 
+    },
+    { 
+        id: 2,
+        title: "Stage Développeur - Devea", 
+        date: "Jan 2025 - Mars 2025", 
+        desc: "Développement Full-Stack Laravel PHP.", 
+        fullDesc: "Intégration au sein d'une équipe Agile. Conception et développement de modules critiques pour l'ERP interne de l'entreprise sous Laravel. Optimisation des requêtes SQL et refactorisation de code legacy.",
+        skills: ["Laravel", "MySQL", "GitLab", "Agile"],
+        images: ["/images/stago.jpg", "/images/recueil-besoin.jpg"],
+        icon: <Briefcase />, 
+        color: "text-cyan-500" 
+    },
+    { 
+        id: 3,
+        title: "Bénévole 24H de l'Info", 
+        date: "Mai 2024 - Juin 2024", 
+        desc: "Technique organisation de l'événement.", 
+        fullDesc: "Membre actif du staff technique. Gestion du réseau, support aux participants (hackathon), et maintenance du site web de l'événement en temps réel.",
+        skills: ["Réseau", "Support", "Communication", "Wix"],
+        images: ["/images/passions/24Info.png"],
+        icon: <Users />, 
+        color: "text-yellow-400" 
+    },
+    { 
+        id: 4,
+        title: "Coach U11 - ASJA", 
+        date: "Oct 2021 - Mai 2022", 
+        desc: "Encadrement sportif, pédagogie et gestion d'équipe pour les jeunes (U11).", 
+        fullDesc: "Gestion d'un groupe de 15 enfants. Planification des entraînements, gestion des conflits, et développement de l'esprit d'équipe. Des compétences transversales essentielles pour le management de projet.",
+        skills: ["Leadership", "Pédagogie", "Management", "Communication"],
+        images: ["/images/passions/st.jpg"], // Placeholder sport
+        icon: <Trophy />, 
+        color: "text-green-500" 
+    },
+    { 
+        id: 5,
+        title: "Stage - OFW Ships", 
+        date: "Déc 2019 - Jan 2020", 
+        desc: "Découverte IT en entreprise.", 
+        fullDesc: "Première immersion dans le monde professionnel IT. Observation de l'administration réseau et support utilisateur de premier niveau.",
+        skills: ["Hardware", "Réseau", "Windows Server"],
+        images: ["/images/raspberry-boot.jpg"],
+        icon: <Globe />, 
+        color: "text-blue-400" 
+    }
+  ];
+
   // --- DONNÉES VOYAGES ---
   const tripDetails = {
     egypt: {
@@ -180,9 +364,9 @@ const App = () => {
       accent: "text-amber-500",
       bgImage: "/images/passions/jardin.jpg",
       locations: [
-        { name: "Le Caire (La capitale)", desc: "Une métropole bouillonnante qui ne dort jamais. Le bruit incessant, les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable. C'est le cœur battant de l'Égypte moderne.", icon: <Users className="w-5 h-5" />, img: "/images/passions/lecaire.png" },
-        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/alex.jpg" },
-        { name: "El Sahel (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
+        { name: "Le Caire (La civilisation)", desc: "Une métropole bouillonnante et historique qui ne dort jamais. Les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable.", icon: <Users className="w-5 h-5" />, img: "/images/passions/lecaire.png" },
+        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/alexa.png" },
+        { name: "Marassi (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
       ]
     },
     morocco: {
@@ -190,10 +374,10 @@ const App = () => {
       subtitle: "L'Ancrage Maternel",
       color: "from-red-600 to-red-900",
       accent: "text-red-500",
-      bgImage: "/images/passions/hassan2.jpg",
+      bgImage: "/images/passions/casa.png",
       locations: [
-        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/casa.png" },
-        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/agadir.png" },
+        { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/hassan2.jpg" },
+        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/mamara.png" },
         { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.png" }
       ]
     }
@@ -209,7 +393,7 @@ const App = () => {
     { label: "Commits Git", value: "350+", icon: <GitCommit className="w-5 h-5 text-pink-400"/> },
   ];
 
-// --- STACK TECHNIQUE (COMPLÈTE & CLASSÉE) ---
+// --- STACK TECHNIQUE ---
   const techStackStructured = {
     "Langages & Fondamentaux": [
       { name: "HTML / CSS", projects: "12+", icon: <Layout />, color: "text-orange-400", gradient: "from-orange-400 to-red-500" },
@@ -280,7 +464,7 @@ const App = () => {
     ]
   };
 
-  // --- PROJETS ---
+  // --- PROJETS (Réorganisé : Fakir en 6e, 24H déplacé) ---
   const projects = [
     {
       id: 1,
@@ -338,16 +522,15 @@ const App = () => {
       icon: <Database className="w-10 h-10 text-teal-400" />
     },
     {
-      id: 6,
-      title: "Site 24H de l'Info",
-      desc: "Site vitrine interactif pour l'événement national IUT.",
-      longDesc: "Site officiel immersif pour les '24h de l'Info'. Présentation du programme, défis temps réel et partenaires avec une identité visuelle forte.",
-      features: ["UI/UX immersif", "Communication", "Multimédia", "Responsive"],
-      tags: ["Web Design", "Wix", "Event"],
-      image: "/images//passions/24Info.png",
-      website: "https://akd9380devlg.wixsite.com/24h-de-l",
+      id: 6, // JEU DU FAKIR ICI (6e projet)
+      title: "Jeu du Fakir",
+      desc: "Simulation Planche de Galton (Hackathon).",
+      longDesc: "Projet Hackathon 24h. Simulation visuelle de probabilités mathématiques. Travail d'équipe sous haute pression. Visualisation des distributions normales.",
+      features: ["Développement Agile", "Travail d'équipe", "Visualisation Données", "Algorithmes Probabilistes"],
+      tags: ["Java", "Hackathon", "Agile"],
+      image: "/images/fakir.jpg",
       github: null,
-      icon: <Layout className="w-10 h-10 text-teal-400" />
+      icon: <Code2 className="w-10 h-10 text-teal-400" />
     },
     {
       id: 7,
@@ -362,14 +545,15 @@ const App = () => {
     },
     {
       id: 8,
-      title: "Jeu du Fakir",
-      desc: "Simulation Planche de Galton (Hackathon).",
-      longDesc: "Projet Hackathon 24h. Simulation visuelle de probabilités mathématiques. Travail d'équipe sous haute pression.",
-      features: ["Développement Agile", "Travail d'équipe", "Visualisation Données"],
-      tags: ["Java", "Hackathon", "Agile"],
-      image: "/images/fakir.jpg",
+      title: "Site 24H de l'Info",
+      desc: "Site vitrine interactif pour l'événement national IUT.",
+      longDesc: "Site officiel immersif pour les '24h de l'Info'. Présentation du programme, défis temps réel et partenaires avec une identité visuelle forte.",
+      features: ["UI/UX immersif", "Communication", "Multimédia", "Responsive"],
+      tags: ["Web Design", "Wix", "Event"],
+      image: "/images//passions/24Info.png",
+      website: "https://akd9380devlg.wixsite.com/24h-de-l",
       github: null,
-      icon: <Code2 className="w-10 h-10 text-teal-400" />
+      icon: <Layout className="w-10 h-10 text-teal-400" />
     },
     {
       id: 9,
@@ -445,35 +629,36 @@ const App = () => {
   };
 
   return (
-    <div className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} font-sans overflow-x-hidden transition-colors duration-300`}>
+    <div className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} font-sans overflow-x-hidden transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200`}>
         
       {/* --- NAVBAR --- */}
       <nav className={`fixed top-0 w-full z-50 ${themeClasses.navBg} backdrop-blur-md border-b ${themeClasses.navBorder} transition-colors duration-300`}>
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold relative z-50">
-            <span className={themeClasses.text}>MK</span>
+          <h1 className="text-2xl font-bold relative z-50 group cursor-pointer">
+            <span className={`${themeClasses.text} group-hover:text-teal-400 transition-colors`}>MK</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">.DEV</span>
           </h1>
             
           <div className={`hidden md:flex space-x-6 text-xs md:text-sm font-medium ${themeClasses.textMuted}`}>
             {navLinks.map((link) => (
-              <a key={link.label} href={link.href} className="hover:text-teal-500 transition-colors">
+              <a key={link.label} href={link.href} className="hover:text-teal-500 transition-colors relative group">
                 {link.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-teal-500 transition-all group-hover:w-full"></span>
               </a>
             ))}
           </div>
             
           <button 
             onClick={toggleTheme}
-            className={`hidden md:flex items-center justify-center w-10 h-10 rounded-full ${isDarkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-200 hover:bg-gray-300'} transition-all`}
+            className={`hidden md:flex items-center justify-center w-10 h-10 rounded-full ${isDarkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-200 hover:bg-gray-300'} transition-all hover:rotate-180 duration-500`}
             title={isDarkMode ? "Passer en mode clair" : "Passer en mode sombre"}
           >
-            {isDarkMode ? <SunMedium className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-teal-600" />}
+            {isDarkMode ? <SunMedium className="w-5 h-5 text-teal-400" /> : <Moon className="w-5 h-5 text-teal-600" />}
           </button>
 
           <div className="md:hidden flex items-center gap-4">
             <button onClick={toggleTheme} className="focus:outline-none">
-                {isDarkMode ? <Sun className="w-6 h-6 text-yellow-400" /> : <Moon className="w-6 h-6 text-teal-600" />}
+                {isDarkMode ? <Sun className="w-6 h-6 text-teal-400" /> : <Moon className="w-6 h-6 text-teal-600" />}
             </button>
             <button 
               className={`${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-black'} relative z-50 focus:outline-none`}
@@ -507,20 +692,20 @@ const App = () => {
         </AnimatePresence>
       </nav>
 
-      {/* --- MODALE --- */}
+      {/* --- MODALE PROJETS (POPUP) --- */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
             onClick={() => setSelectedProject(null)}
           >
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              initial={{ scale: 0.9, opacity: 0, y: 50 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              exit={{ scale: 0.9, opacity: 0, y: 50 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className={`w-full max-w-3xl max-h-[90vh] overflow-y-auto ${themeClasses.cardBg} rounded-2xl border ${themeClasses.cardBorder} shadow-2xl relative`}
               onClick={(e) => e.stopPropagation()}
@@ -532,9 +717,11 @@ const App = () => {
                 <X className="w-6 h-6" />
               </button>
 
-              <div className="h-64 sm:h-80 w-full relative overflow-hidden">
+              <div className="h-64 sm:h-80 w-full relative overflow-hidden group">
                 <div className={`absolute inset-0 bg-gradient-to-t ${isDarkMode ? 'from-[#111]' : 'from-white'} to-transparent z-10`} />
-                <img 
+                <motion.img 
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
                   src={selectedProject.image} 
                   alt={selectedProject.title}
                   className="w-full h-full object-cover"
@@ -610,60 +797,154 @@ const App = () => {
         )}
       </AnimatePresence>
 
-      {/* --- HERO --- */}
-      <SectionWrapper id="accueil" className="relative min-h-screen flex items-center justify-center pt-20">
+      {/* --- MODALE EXPERIENCE (DRAWER/SIDE PANEL) --- */}
+      <AnimatePresence>
+        {selectedExperience && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+              onClick={() => setSelectedExperience(null)}
+            />
+            <motion.div 
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className={`fixed top-0 right-0 h-full w-full md:w-[600px] z-[70] ${isDarkMode ? 'bg-[#0f0f0f]/95' : 'bg-white/95'} backdrop-blur-xl border-l ${themeClasses.cardBorder} shadow-2xl overflow-y-auto`}
+            >
+              <div className="p-8">
+                <button onClick={() => setSelectedExperience(null)} className="mb-8 flex items-center gap-2 text-teal-500 font-bold hover:underline">
+                    <ArrowRight className="w-5 h-5 rotate-180" /> Retour
+                </button>
+                
+                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+                    <div className={`w-16 h-16 rounded-2xl ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center mb-6`}>
+                        <div className={selectedExperience.color}>{selectedExperience.icon}</div>
+                    </div>
+                    <h2 className="text-4xl font-extrabold mb-2 leading-tight">{selectedExperience.title}</h2>
+                    <p className="text-teal-500 font-mono mb-6">{selectedExperience.date}</p>
+                    
+                    <div className="h-1 w-20 bg-gradient-to-r from-teal-500 to-cyan-500 mb-8 rounded-full" />
+                    
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Eye className="w-5 h-5 text-purple-500" /> Détails de l'expérience</h3>
+                    <p className={`${themeClasses.textMuted} text-lg leading-relaxed mb-8`}>
+                        {selectedExperience.fullDesc}
+                    </p>
+
+                    <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Sparkles className="w-5 h-5 text-yellow-500" /> Compétences Acquises</h3>
+                    <div className="flex flex-wrap gap-3 mb-10">
+                        {selectedExperience.skills.map(s => (
+                            <span key={s} className="px-3 py-1 bg-teal-500/10 text-teal-500 border border-teal-500/20 rounded-full text-sm font-bold">
+                                {s}
+                            </span>
+                        ))}
+                    </div>
+
+                    {selectedExperience.images && selectedExperience.images.length > 0 && (
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><ZoomIn className="w-5 h-5 text-blue-500" /> Galerie</h3>
+                            <div className="grid grid-cols-1 gap-4">
+                                {selectedExperience.images.map((img, idx) => (
+                                    <div key={idx} className="rounded-xl overflow-hidden border border-white/10 group">
+                                        <img src={img} alt="Experience" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500" onError={(e) => e.target.style.display='none'} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </motion.div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* --- HERO SECTION (INSANE BACKGROUND) --- */}
+      <SectionWrapper id="accueil" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        {/* ANIMATED PARTICLES BACKGROUND */}
+        <ParticleBackground isDarkMode={isDarkMode} />
+        
+        {/* Abstract Blobs */}
         <motion.div 
           className="absolute top-20 right-0 w-96 h-96 bg-teal-600/20 rounded-full blur-[120px]"
-          animate={{ scale: [1, 1.2, 1], x: [0, 20, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div 
           className="absolute bottom-0 left-0 w-72 h-72 bg-cyan-500/10 rounded-full blur-[100px]"
-          animate={{ scale: [1, 1.1, 1], y: [0, -20, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.5, 1], y: [0, -50, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-          <motion.div 
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0, x: -50 },
-              visible: { 
-                opacity: 1, 
-                x: 0,
-                transition: { 
-                  staggerChildren: 0.2 
-                } 
-              }
-            }}
-          >
-            <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-teal-500 font-medium mb-4 tracking-wide">Salut, je suis</motion.p>
-            <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <span className={themeClasses.text}>Mohamed</span> <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Kosbar</span>
-            </motion.h1>
-            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className={`${themeClasses.textMuted} text-lg mb-8 max-w-lg leading-relaxed h-12`}>
-<Typewriter text={["Conception d'Architectures Web & Mobiles.", " Spécialisé en Java, React & DevOps.", " Disponible pour un stage de 14 semaines."]} />            </motion.div>
-            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row gap-4">
-              <a href="#projets" className={`px-8 py-3 font-bold rounded-full transition-colors text-center ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>Voir mes projets</a>
-              <div className="flex gap-4 items-center justify-center sm:justify-start px-4">
-                <a href="https://github.com/DevKosX" target="_blank"><Github className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
-                <a href="https://www.linkedin.com/in/mohamed-kosbar-5a57972ba/" target="_blank"><Linkedin className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
-              </div>
+          <TiltCard className="p-4">
+            <motion.div 
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0, x: -50 },
+                visible: { 
+                  opacity: 1, 
+                  x: 0,
+                  transition: { staggerChildren: 0.1 } 
+                }
+              }}
+            >
+              <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-teal-500 font-bold mb-4 tracking-widest uppercase text-sm border-l-4 border-teal-500 pl-3">
+                Portfolio 2025
+              </motion.p>
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-5xl md:text-8xl font-black mb-6 leading-tight tracking-tighter">
+                <span className={themeClasses.text}>Mohamed</span> <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-500 to-teal-600 animate-gradient-x">Kosbar</span>
+              </motion.h1>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className={`${themeClasses.textMuted} text-xl mb-8 max-w-lg leading-relaxed h-16 font-light`}>
+                 <Typewriter text={[
+                   "Conception d'Architectures Web & Mobiles.", 
+                   "Spécialisé en Java, React & DevOps.", 
+                   "Disponible pour un stage de 14 semaines."
+                 ]} />            
+              </motion.div>
+              <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row gap-6">
+                <a href="#projets" className={`px-8 py-4 font-bold rounded-full transition-all text-center flex items-center justify-center gap-2 hover:scale-105 active:scale-95 shadow-xl shadow-teal-500/20 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>
+                   Explorer <ArrowRight className="w-4 h-4" />
+                </a>
+                <div className="flex gap-4 items-center justify-center sm:justify-start px-4">
+                  <a href="https://github.com/DevKosX" target="_blank" className="hover:scale-125 transition-transform"><Github className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
+                  <a href="https://www.linkedin.com/in/mohamed-kosbar-5a57972ba/" target="_blank" className="hover:scale-125 transition-transform"><Linkedin className={`w-6 h-6 ${themeClasses.textMuted} hover:text-teal-500 cursor-pointer transition-colors`} /></a>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative flex justify-center mt-8 lg:mt-0">
-            <div className={`w-64 h-64 md:w-80 md:h-80 bg-gradient-to-tr from-teal-500/20 to-cyan-600/20 rounded-full border ${themeClasses.navBorder} backdrop-blur-3xl flex items-center justify-center shadow-2xl shadow-teal-500/10 animate-[spin_10s_linear_infinite]`}>
-              <div className={`w-2/3 h-2/3 ${isDarkMode ? 'bg-black/40' : 'bg-white/40'} rounded-full flex items-center justify-center border ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>
+          </TiltCard>
+
+          <TiltCard className="relative flex justify-center mt-8 lg:mt-0">
+            <motion.div 
+               animate={{ rotate: 360 }}
+               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+               className={`w-64 h-64 md:w-96 md:h-96 rounded-full border border-teal-500/30 border-dashed absolute`}
+            />
+             <motion.div 
+               animate={{ rotate: -360 }}
+               transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+               className={`w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full border border-cyan-500/20 absolute`}
+            />
+            <div className={`w-64 h-64 md:w-80 md:h-80 bg-gradient-to-tr from-teal-500/20 to-cyan-600/20 rounded-full border ${themeClasses.navBorder} backdrop-blur-3xl flex items-center justify-center shadow-2xl shadow-teal-500/20 relative z-10`}>
+              <div className={`w-2/3 h-2/3 ${isDarkMode ? 'bg-black/80' : 'bg-white/80'} rounded-full flex items-center justify-center border ${isDarkMode ? 'border-white/5' : 'border-black/5'} relative`}>
                 <Code2 className="w-20 h-20 text-teal-500" />
+                {/* Orbiting Icons */}
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="absolute inset-0">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black p-2 rounded-full border border-teal-500"><Database className="w-4 h-4 text-teal-500"/></div>
+                </motion.div>
+                <motion.div animate={{ rotate: -360 }} transition={{ duration: 12, repeat: Infinity, ease: "linear" }} className="absolute inset-4">
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-black p-2 rounded-full border border-purple-500"><Cpu className="w-4 h-4 text-purple-500"/></div>
+                </motion.div>
               </div>
             </div>
-          </motion.div>
+          </TiltCard>
         </div>
       </SectionWrapper>
 
-      {/* --- DASHBOARD --- */}
+      {/* --- DASHBOARD (PARCOURS AVEC DRAWER) --- */}
       <SectionWrapper id="dashboard" className={`py-32 ${themeClasses.sectionBgAlt} relative overflow-hidden`}>
          <div className="max-w-7xl mx-auto px-6 relative z-10">
            <div className="text-center mb-16">
@@ -677,25 +958,34 @@ const App = () => {
            </div>
 
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-             <div className="lg:col-span-7 space-y-12">
-               {[
-                 { title: "Développeur Full-Stack", date: "2022 - Présent", desc: "3 ans d'expérience cumulée (académique & projets).", icon: <Code2 />, color: "text-teal-500" },
-                 { title: "Stage Développeur - Devea", date: "Jan 2025 - Mars 2025", desc: "Développement Full-Stack Laravel PHP.", icon: <Briefcase />, color: "text-cyan-500" },
-                 { title: "Bénévole 24H de l'Info", date: "Mai 2024 - Juin 2024", desc: "Technique organisation de l'événement.", icon: <Users />, color: "text-yellow-400" },
-                 { title: "Coach U11 - ASJA", date: "Oct 2021 - Mai 2022", desc: "Encadrement sportif, pédagogie et gestion d'équipe pour les jeunes (U11).", icon: <Trophy />, color: "text-green-500" },
-                 { title: "Stage - OFW Ships", date: "Déc 2019 - Jan 2020", desc: "Découverte IT en entreprise.", icon: <Globe />, color: "text-blue-400" }
-               ].map((item, index) => (
-                 <motion.div key={index} initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.5, delay: index * 0.1 }} className={`relative group pl-8 lg:pl-0 flex flex-col lg:flex-row gap-6 items-center`}>
+             <div className="lg:col-span-7 space-y-8">
+               {experiencesData.map((item, index) => (
+                 <motion.div 
+                    key={index} 
+                    initial={{ opacity: 0, x: -50 }} 
+                    whileInView={{ opacity: 1, x: 0 }} 
+                    viewport={{ once: true, margin: "-50px" }} 
+                    transition={{ duration: 0.5, delay: index * 0.1 }} 
+                    className={`relative group pl-8 lg:pl-0 flex flex-col lg:flex-row gap-6 items-center cursor-pointer`}
+                    onClick={() => setSelectedExperience(item)} // Ouvre le Drawer
+                 >
                    <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-800 lg:hidden" />
-                   <div className={`relative z-10 w-16 h-16 rounded-2xl ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} border border-gray-700 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300`}>
+                   {/* Icon Box with Pulse */}
+                   <div className={`relative z-10 w-16 h-16 rounded-2xl ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'} border border-gray-700 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:border-teal-500 transition-all duration-300`}>
                      <div className={`p-3 rounded-xl bg-opacity-10 bg-current ${item.color}`}><div className={item.color}>{item.icon}</div></div>
+                     <div className="absolute inset-0 rounded-2xl border border-teal-500/0 group-hover:border-teal-500/50 group-hover:animate-ping opacity-20"></div>
                    </div>
-                   <div className={`flex-1 w-full ${themeClasses.cardBg} p-6 rounded-2xl border ${themeClasses.cardBorder} hover:border-teal-500/30 transition-all shadow-lg group-hover:shadow-teal-500/5`}>
+                   
+                   {/* Card Content */}
+                   <div className={`flex-1 w-full ${themeClasses.cardBg} p-6 rounded-2xl border ${themeClasses.cardBorder} hover:border-teal-500/30 transition-all shadow-lg group-hover:shadow-teal-500/10 group-hover:-translate-y-1`}>
                      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
-                       <h4 className={`text-xl font-bold ${themeClasses.text}`}>{item.title}</h4>
+                       <h4 className={`text-xl font-bold ${themeClasses.text} group-hover:text-teal-400 transition-colors`}>{item.title}</h4>
                        <span className="text-xs font-mono py-1 px-2 rounded bg-gray-800 text-gray-400 border border-gray-700 mt-2 sm:mt-0 w-fit">{item.date}</span>
                      </div>
                      <p className={themeClasses.textMuted}>{item.desc}</p>
+                     <div className="mt-4 flex items-center gap-2 text-xs font-bold text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                        Voir les détails <ArrowRight className="w-3 h-3" />
+                     </div>
                    </div>
                  </motion.div>
                ))}
@@ -703,8 +993,8 @@ const App = () => {
              <div className="lg:col-span-5 lg:sticky lg:top-32">
                 <div className="grid grid-cols-2 gap-4">
                    {stats.map((stat, idx) => (
-                     <motion.div key={idx} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} p-6 rounded-3xl flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors aspect-square shadow-xl backdrop-blur-sm`}>
-                       <div className={`mb-3 ${stat.icon.props.className.includes('text-') ? stat.icon.props.className : 'text-gray-400'}`}>{stat.icon}</div>
+                     <motion.div key={idx} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }} className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} p-6 rounded-3xl flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors aspect-square shadow-xl backdrop-blur-sm group hover:border-teal-500/20`}>
+                       <div className={`mb-3 ${stat.icon.props.className.includes('text-') ? stat.icon.props.className : 'text-gray-400'} group-hover:scale-110 transition-transform`}>{stat.icon}</div>
                        <h4 className={`text-3xl lg:text-4xl font-black ${themeClasses.text} mb-1`}><AnimatedCounter value={stat.value} /></h4>
                        <p className={`text-xs font-bold uppercase tracking-wider ${themeClasses.textMuted}`}>{stat.label}</p>
                      </motion.div>
@@ -796,7 +1086,7 @@ const App = () => {
         </div>
       </SectionWrapper>
 
-      {/* --- A PROPOS --- */}
+      {/* --- A PROPOS (AVEC TILT 3D) --- */}
       <SectionWrapper id="about" className={`min-h-screen flex items-center py-24 ${themeClasses.sectionBgAlt} transition-colors duration-300 relative overflow-hidden`}>
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -810,7 +1100,7 @@ const App = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <motion.div initial={{ x: -50, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} viewport={{ once: true }} className="relative group">
+            <TiltCard className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000" />
               <div className={`relative h-full ${isDarkMode ? 'bg-[#0a0a0a]/90' : 'bg-white/90'} backdrop-blur-xl p-8 rounded-3xl border ${themeClasses.cardBorder} flex flex-col items-center text-center`}>
                 <div className="relative w-48 h-48 mb-6 group-hover:scale-105 transition-transform duration-500">
@@ -834,10 +1124,10 @@ const App = () => {
                 </div>
                 <div className="w-full">
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-1"><span>Motivation</span><span>100%</span></div>
-                  <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-teal-500 to-cyan-600 w-full" /></div>
+                  <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-teal-500 to-cyan-600 w-full animate-pulse" /></div>
                 </div>
               </div>
-            </motion.div>
+            </TiltCard>
 
             <div className="lg:col-span-2 space-y-6">
               <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className={`p-6 rounded-2xl border ${themeClasses.cardBorder} ${isDarkMode ? 'bg-[#0a0a0a]/60' : 'bg-white/60'} backdrop-blur-md hover:border-teal-500/30 transition-colors group`}>
@@ -870,7 +1160,7 @@ const App = () => {
               </motion.div>
               <motion.div initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="flex flex-wrap gap-3">
                 {["Curiosité", "Travail d'équipe", "Rigueur", "Autonomie", "Leader", "Clean Code", "Adaptabilité"].map((skill, idx) => (
-                  <span key={idx} className={`px-4 py-2 rounded-full text-sm font-bold border ${isDarkMode ? 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'} transition-colors cursor-default flex items-center gap-2`}>
+                  <span key={idx} className={`px-4 py-2 rounded-full text-sm font-bold border ${isDarkMode ? 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'} transition-colors cursor-default flex items-center gap-2 hover:scale-105 transform duration-200`}>
                     <Sparkles className="w-3 h-3 text-yellow-500" />{skill}
                   </span>
                 ))}
@@ -880,113 +1170,113 @@ const App = () => {
         </div>
       </SectionWrapper>
 
-      {/* --- PASSIONS --- */}
-      <SectionWrapper id="passions" className={`py-24 ${themeClasses.sectionBgDarker} relative overflow-hidden transition-colors duration-300`}>
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-16 text-center">
-            <span className={themeClasses.text}>Mes</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Passions</span> & Inspirations
-          </h2>
+        {/* --- PASSIONS --- */}
+      <SectionWrapper id="passions" className={`py-24 ${themeClasses.sectionBgDarker} relative overflow-hidden transition-colors duration-300`}>
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-16 text-center">
+            <span className={themeClasses.text}>Mes</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Passions</span> & Inspirations
+          </h2>
 
-          <div className="mb-24">
-            <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}><Plane className="w-6 h-6 text-teal-500" /> Odyssée Culturelle</h3>
-            {!activeTrip && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-96 transition-all duration-500 ease-in-out">
-                <div onClick={() => setActiveTrip('egypt')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-amber-500/50 transition-all duration-300">
-                  <img src="/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
-                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines paternelles</span>
-                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Égypte</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Tanta, Alexandrie & Sahel <ArrowRight className="w-4 h-4" /></p>
-                  </div>
-                </div>
-                <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
-                  <img src="/images/passions/hassan2.jpg" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
-                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines maternelles</span>
-                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Maroc</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Casa, Marrakech & Nador <ArrowRight className="w-4 h-4" /></p>
-                  </div>
-                </div>
-              </div>
-            )}
-            {activeTrip && (
-              <div className={`relative w-full bg-slate-800 rounded-3xl overflow-hidden shadow-2xl border ${themeClasses.cardBorder} animate-in fade-in slide-in-from-bottom-10 duration-500`}>
-                <div className={`relative h-48 md:h-64 overflow-hidden`}>
-                  <img src={tripDetails[activeTrip].bgImage} className="w-full h-full object-cover opacity-40 blur-sm" onError={(e) => e.target.style.display='none'} />
-                  <div className={`absolute inset-0 bg-gradient-to-b ${tripDetails[activeTrip].color} opacity-60 mix-blend-multiply`} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                      <h3 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight drop-shadow-lg">{tripDetails[activeTrip].title}</h3>
-                      <p className="text-xl text-white/90 font-light italic">{tripDetails[activeTrip].subtitle}</p>
-                  </div>
-                  <button onClick={() => setActiveTrip(null)} className="absolute top-4 right-4 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white transition-all backdrop-blur-md z-20"><X className="w-6 h-6" /></button>
-                </div>
-                <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {tripDetails[activeTrip].locations.map((loc, idx) => (
-                      <div key={idx} className="group bg-slate-900/50 rounded-xl p-4 hover:bg-slate-900 transition-colors duration-300 border border-transparent hover:border-gray-700">
-                        <div className="h-40 w-full rounded-lg overflow-hidden mb-4 relative">
-                            <img src={loc.img} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onError={(e) => e.target.style.display='none'} />
-                            <div className={`absolute top-2 right-2 bg-black/70 p-1.5 rounded-lg text-white`}>{loc.icon}</div>
-                        </div>
-                        <h5 className={`text-xl font-bold ${tripDetails[activeTrip].accent} mb-2`}>{loc.name}</h5>
-                        <p className={`${themeClasses.textMuted} text-sm leading-relaxed`}>{loc.desc}</p>
-                      </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <div className="mb-24">
+            <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}><Plane className="w-6 h-6 text-teal-500" /> Odyssée Culturelle</h3>
+            {!activeTrip && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-96 transition-all duration-500 ease-in-out">
+                <div onClick={() => setActiveTrip('egypt')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-amber-500/50 transition-all duration-300">
+                  <img src="/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
+                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines paternelles</span>
+                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Égypte</h4>
+                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Le Caire, Alexandrie & Marassi <ArrowRight className="w-4 h-4" /></p>
+                  </div>
+                </div>
+                <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
+                  <img src="/images/passions/casa.png" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
+                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines maternelles</span>
+                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Maroc</h4>
+                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Casa, Marrakech & Nador <ArrowRight className="w-4 h-4" /></p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {activeTrip && (
+              <div className={`relative w-full bg-slate-800 rounded-3xl overflow-hidden shadow-2xl border ${themeClasses.cardBorder} animate-in fade-in slide-in-from-bottom-10 duration-500`}>
+                <div className={`relative h-48 md:h-64 overflow-hidden`}>
+                  <img src={tripDetails[activeTrip].bgImage} className="w-full h-full object-cover opacity-40 blur-sm" onError={(e) => e.target.style.display='none'} />
+                  <div className={`absolute inset-0 bg-gradient-to-b ${tripDetails[activeTrip].color} opacity-60 mix-blend-multiply`} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                      <h3 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight drop-shadow-lg">{tripDetails[activeTrip].title}</h3>
+                      <p className="text-xl text-white/90 font-light italic">{tripDetails[activeTrip].subtitle}</p>
+                  </div>
+                  <button onClick={() => setActiveTrip(null)} className="absolute top-4 right-4 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white transition-all backdrop-blur-md z-20"><X className="w-6 h-6" /></button>
+                </div>
+                <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {tripDetails[activeTrip].locations.map((loc, idx) => (
+                      <div key={idx} className="group bg-slate-900/50 rounded-xl p-4 hover:bg-slate-900 transition-colors duration-300 border border-transparent hover:border-gray-700">
+                        <div className="h-40 w-full rounded-lg overflow-hidden mb-4 relative">
+                            <img src={loc.img} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onError={(e) => e.target.style.display='none'} />
+                            <div className={`absolute top-2 right-2 bg-black/70 p-1.5 rounded-lg text-white`}>{loc.icon}</div>
+                        </div>
+                        <h5 className={`text-xl font-bold ${tripDetails[activeTrip].accent} mb-2`}>{loc.name}</h5>
+                        <p className={`${themeClasses.textMuted} text-sm leading-relaxed`}>{loc.desc}</p>
+                      </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-green-500/30 transition-all shadow-md`}>
-               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-48 h-48 text-green-500" /></div>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><HeartPulse className="w-6 h-6 text-green-500" /> Le Football, une école de vie</h3>
-               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
-                 <p>Le football est bien plus qu'un sport pour moi. J'ai eu la chance d'atteindre un excellent niveau en évoluant en <span className={`${themeClasses.text} font-bold`}>U17 Nationaux avec Aubervilliers (Génération 2005)</span>. C'était l'école de la rigueur, de la tactique et du dépassement de soi.</p>
-                 <p>Malheureusement, une blessure (la maladie d'Osgood-Schlatter) a freiné cette ascension. Mais cette épreuve m'a appris la résilience. J'ai transféré cette compétitivité et cette soif d'apprendre dans mes études et le développement informatique. Aujourd'hui, je code avec la même intensité que je jouais sur le terrain.</p>
-               </div>
-            </div>
-            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-red-500/30 transition-all shadow-md`}>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Tv className="w-6 h-6 text-red-500" /> Cinéphile</h3>
-               <div className="space-y-6">
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/st.jpg" alt="Stranger Things" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-red-500 transition-colors`}>Stranger Things</h4><p className={`text-xs ${themeClasses.textMuted}`}>Mystère & Années 80</p></div>
-                 </div>
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/echo.webp" alt="Echoes of the Past" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-yellow-500 transition-colors`}>Echoes of the Past</h4><p className={`text-xs ${themeClasses.textMuted}`}>Drame Égyptien</p></div>
-                 </div>
-               </div>
-            </div>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-green-500/30 transition-all shadow-md`}>
+               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-48 h-48 text-green-500" /></div>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><HeartPulse className="w-6 h-6 text-green-500" /> Le Football, une école de vie</h3>
+               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
+                 <p>Le football est bien plus qu'un sport pour moi. J'ai eu la chance d'atteindre un excellent niveau en évoluant en <span className={`${themeClasses.text} font-bold`}>U17 Nationaux avec Aubervilliers (Génération 2005)</span>. C'était l'école de la rigueur, de la tactique et du dépassement de soi.</p>
+                 <p>Malheureusement, une blessure (la maladie d'Osgood-Schlatter) a freiné cette ascension. Mais cette épreuve m'a appris la résilience. J'ai transféré cette compétitivité et cette soif d'apprendre dans mes études et le développement informatique. Aujourd'hui, je code avec la même intensité que je jouais sur le terrain.</p>
+               </div>
+            </div>
+            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-red-500/30 transition-all shadow-md`}>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Tv className="w-6 h-6 text-red-500" /> Cinéphile</h3>
+               <div className="space-y-6">
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/st.jpg" alt="Stranger Things" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-red-500 transition-colors`}>Stranger Things</h4><p className={`text-xs ${themeClasses.textMuted}`}>Mystère & Années 80</p></div>
+                 </div>
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/echo.webp" alt="Echoes of the Past" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-yellow-500 transition-colors`}>Echoes of the Past</h4><p className={`text-xs ${themeClasses.textMuted}`}>Drame Égyptien</p></div>
+                 </div>
+               </div>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-teal-500/30 transition-all shadow-md`}>
-               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Waves className="w-48 h-48 text-teal-500" /></div>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Waves className="w-6 h-6 text-teal-500" /> La Natation, mon second souffle</h3>
-               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
-                 <p>De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité, des atouts majeurs pour mon jeu au football et c'est devenu une passion.</p>
-                 <p>Aujourd'hui, je nage partout : de l'Atlantique (Agadir, Deauville) à la Mer Rouge (Hurghada), en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée.</p>
-               </div>
-            </div>
-            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-purple-500/30 transition-all shadow-md`}>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Gamepad2 className="w-6 h-6 text-purple-500" /> Gamer</h3>
-               <div className="space-y-6">
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/fm.avif" alt="Football Manager" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-purple-500 transition-colors`}>Football Manager</h4><p className={`text-xs ${themeClasses.textMuted}`}>Stratégie & Gestion</p></div>
-                 </div>
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/last.jpg" alt="The Last of Us" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-green-500 transition-colors`}>The Last of Us</h4><p className={`text-xs ${themeClasses.textMuted}`}>Narratif & Émotion</p></div>
-                 </div>
-               </div>
-            </div>
-          </div>
-        </div>
-      </SectionWrapper>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className={`md:col-span-2 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 relative overflow-hidden group hover:border-teal-500/30 transition-all shadow-md`}>
+               <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Waves className="w-48 h-48 text-teal-500" /></div>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Waves className="w-6 h-6 text-teal-500" /> La Natation, mon second souffle</h3>
+               <div className={`space-y-4 ${themeClasses.textMuted} relative z-10 leading-relaxed`}>
+                 <p>De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité, des atouts majeurs pour mon jeu au football et c'est devenu une passion.</p>
+                 <p>Aujourd'hui, je nage partout : de l'Atlantique (Agadir, Deauville) à la Mer Rouge (Hurghada), en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée.</p>
+               </div>
+            </div>
+            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-purple-500/30 transition-all shadow-md`}>
+               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Gamepad2 className="w-6 h-6 text-purple-500" /> Gamer</h3>
+               <div className="space-y-6">
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/fm.avif" alt="Football Manager" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-purple-500 transition-colors`}>Football Manager</h4><p className={`text-xs ${themeClasses.textMuted}`}>Stratégie & Gestion</p></div>
+                 </div>
+                 <div className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/last.jpg" alt="The Last of Us" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
+                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-green-500 transition-colors`}>The Last of Us</h4><p className={`text-xs ${themeClasses.textMuted}`}>Narratif & Émotion</p></div>
+                 </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </SectionWrapper>
 
       {/* --- CONTACT --- */}
       <SectionWrapper id="contact" className={`py-32 ${themeClasses.sectionBgAlt} relative overflow-hidden`}>
@@ -1034,7 +1324,7 @@ const App = () => {
                {formStatus === 'success' ? (
                   <div className="h-full flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in zoom-in duration-500">
                      <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/50"><CheckCircle2 className="w-12 h-12 text-green-500" /></div>
-                     <div><h3 className={`text-3xl font-bold ${themeClasses.text} mb-2`}>Message Prêt !</h3><p className="text-gray-400 text-lg">Votre client mail va s'ouvrir pour finaliser l'envoi.</p></div>
+                     <div><h3 className={`text-3xl font-bold ${themeClasses.text} mb-2`}>Message Prêt !</h3><p className="text-gray-400 text-lg">Votre message a bien été envoyé.</p></div>
                      <button onClick={() => setFormStatus('idle')} className="text-teal-500 font-bold hover:underline mt-4">Envoyer un autre message</button>
                   </div>
                ) : (
