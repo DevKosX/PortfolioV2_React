@@ -136,31 +136,39 @@ const App = () => {
     }));
   };
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     setFormStatus('sending');
 
-    // Construction du lien mailto
-    const recipient = "kosbarmohamed.31@gmail.com";
-    const subject = encodeURIComponent(`Portfolio Contact: ${formData.subject}`);
-    const body = encodeURIComponent(
-      `Nom: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    );
-    
-    setTimeout(() => {
-      // Ouvre le client mail par défaut avec les infos pré-remplies
-      window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
-      
-      setFormStatus('success');
-      // Reset du formulaire
-      setFormData({
-        name: '',
-        email: '',
-        subject: 'Développement Site Web',
-        message: ''
+    try {
+      // Ton ID est inséré ici 👇
+      const response = await fetch("https://formspree.io/f/xqaroebl", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(formData)
       });
-      setTimeout(() => setFormStatus('idle'), 3000);
-    }, 1500);
+
+      if (response.ok) {
+        setFormStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          subject: 'Développement Site Web',
+          message: ''
+        });
+      } else {
+        console.error("Erreur Formspree");
+        setFormStatus('idle');
+        alert("Une erreur est survenue. Merci de réessayer.");
+      }
+    } catch (error) {
+      console.error(error);
+      setFormStatus('idle');
+      alert("Erreur de connexion.");
+    }
   };
 
   // --- DONNÉES VOYAGES ---
@@ -193,7 +201,7 @@ const App = () => {
 
   // --- STATS ---
   const stats = [
-    { label: "Projets", value: "12+", icon: <Briefcase className="w-5 h-5 text-teal-500"/> },
+    { label: "Projets", value: "15+", icon: <Briefcase className="w-5 h-5 text-teal-500"/> },
     { label: "Clients", value: "5", icon: <Users className="w-5 h-5 text-cyan-500"/> },
     { label: "Années Exp.", value: "3", icon: <Star className="w-5 h-5 text-yellow-400"/> },
     { label: "Lignes de Code", value: "45k", icon: <FileCode className="w-5 h-5 text-emerald-500"/> },
