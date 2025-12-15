@@ -170,11 +170,11 @@ const App = () => {
       subtitle: "Mes Racines, Ma Terre",
       color: "from-yellow-600 to-amber-900",
       accent: "text-amber-500",
-      bgImage: "/images/passions/jardin.jpg",
+      bgImage: "/images/passions/image2.jpg",
       locations: [
-        { name: "Le Caire (La capitale)", desc: "Une métropole bouillonnante qui ne dort jamais. Le bruit incessant, les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable. C'est le cœur battant de l'Égypte moderne.", icon: <Users className="w-5 h-5" />, img: "/images/passions/village.jpg" },
-        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/alexandria.jpg" },
-        { name: "El Sahel (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
+        { name: "Le Caire (La capitale)", desc: "Une métropole bouillonnante qui ne dort jamais. Le bruit incessant, les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable. C'est le cœur battant de l'Égypte moderne.", icon: <Users className="w-5 h-5" />, img: "/images/passions/.jpg" },
+        { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/jardin.jpg" },
+        { name: "El Sahel (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/image1.jpg" }
       ]
     },
     morocco: {
