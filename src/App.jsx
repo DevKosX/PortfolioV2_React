@@ -368,7 +368,7 @@ const App = () => {
             "Développement technique et tactique des jeunes.",
             "Gestion de la cohésion de groupe."
         ],
-        images: ["/images/passions/st.jpg"], 
+        images: ["/images/stade.jpg"], 
         icon: <Trophy />, 
         color: "text-green-500" 
 
@@ -599,7 +599,7 @@ const App = () => {
             <span className={`${themeClasses.text} group-hover:text-teal-400 transition-colors`}>MK</span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">.DEV</span>
           </h1>
-            
+                  
           <div className={`hidden md:flex space-x-6 text-xs md:text-sm font-medium ${themeClasses.textMuted}`}>
             {navLinks.map((link) => (
               <a key={link.label} href={link.href} className="hover:text-teal-500 transition-colors relative group">
@@ -670,8 +670,7 @@ const App = () => {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-500 to-teal-600 animate-gradient-x">Kosbar</span>
               </motion.h1>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className={`${themeClasses.textMuted} text-xl mb-8 max-w-lg leading-relaxed h-16 font-light`}>
-                 <Typewriter text={["Conception d'Architectures Web & Mobiles.", "Spécialisé en Java, React & DevOps.", "Disponible pour un stage de 14 semaines."]} />             
-              </motion.div>
+                 <Typewriter text={["Spécialisé en Java, React & DevOps.", "Disponible pour un stage de 14 semaines."]} /></motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row gap-6">
                 <a href="#projets" className={`px-8 py-4 font-bold rounded-full transition-all text-center flex items-center justify-center gap-2 hover:scale-105 active:scale-95 shadow-xl shadow-teal-500/20 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>
                     Explorer <ArrowRight className="w-4 h-4" />
@@ -1317,7 +1316,7 @@ const App = () => {
                      </div>
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-purple-500/10 rounded-lg text-purple-500 mt-1"><MapPin className="w-6 h-6" /></div>
-                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Localisation</p><p className={`text-xl font-medium ${themeClasses.text}`}>Paris, France</p><p className="text-sm text-gray-500 mt-1">Disponible en télétravail</p></div>
+                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Localisation</p><p className={`text-xl font-medium ${themeClasses.text}`}>Aubervilliers, France</p><p className="text-sm text-gray-500 mt-1">Disponible en télétravail & sur site</p></div>
                      </div>
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-blue-500/10 rounded-lg text-blue-500 mt-1"><Briefcase className="w-6 h-6" /></div>
