@@ -219,6 +219,7 @@ const App = () => {
   const [selectedExperience, setSelectedExperience] = useState(null); 
   const [activeTrip, setActiveTrip] = useState(null); 
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [activeCategory, setActiveCategory] = useState("Langages & Fondamentaux");
   
   // State pour l'animation "Scanner" de la section About
   const [scanComplete, setScanComplete] = useState(false);
@@ -1129,48 +1130,86 @@ const App = () => {
       </SectionWrapper>
 
       {/* --- STACK TECHNIQUE --- */}
-      <SectionWrapper id="stack" className={`py-32 ${themeClasses.sectionBgDarker} transition-colors duration-300 relative overflow-hidden`}>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <SectionWrapper id="stack" className={`py-32 ${themeClasses.sectionBgDarker} relative overflow-hidden`}>
+  <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <div className="text-center mb-16">
+      <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
+        <span className={themeClasses.text}>Arsenal</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Technique</span>
+      </h2>
+      <p className={themeClasses.textMuted}>Une expertise segmentée pour des solutions complètes.</p>
+    </div>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="space-y-20">
-            <div className="text-center mb-16">
-               <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-                 <span className={themeClasses.text}>Arsenal</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Détaillé</span>
-               </h2>
-               <p className={themeClasses.textMuted}>Exploration par domaine de compétence.</p>
-            </div>
-            {Object.entries(techStackStructured).map(([category, techs]) => (
-              <div key={category} className="relative">
-                <div className="flex items-center gap-6 mb-10">
-                  <div className={`h-px flex-1 ${isDarkMode ? 'bg-gradient-to-r from-transparent to-gray-800' : 'bg-gray-300'}`} />
-                  <span className={`text-2xl font-black uppercase tracking-widest ${themeClasses.text} border-2 border-dashed border-gray-700 px-6 py-2 rounded-lg`}>{category}</span>
-                  <div className={`h-px flex-1 ${isDarkMode ? 'bg-gradient-to-l from-transparent to-gray-800' : 'bg-gray-300'}`} />
+    {/* NAVIGATION FLUIDE (TABS) */}
+    <div className="flex justify-center mb-12">
+      <div className={`inline-flex p-1.5 rounded-2xl ${isDarkMode ? 'bg-white/5' : 'bg-gray-200'} backdrop-blur-md border ${themeClasses.cardBorder}`}>
+        {Object.keys(techStackStructured).map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`relative px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-300 ${
+              activeCategory === cat ? "text-white" : themeClasses.textMuted
+            }`}
+          >
+            {activeCategory === cat && (
+              <motion.div
+                layoutId="activeTab"
+                className="absolute inset-0 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl shadow-lg"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className="relative z-10">{cat}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* GRILLE ANIMÉE FLUIDE */}
+    <div className="relative min-h-[500px]">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeCategory}
+          initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
+          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, x: -20, filter: "blur(10px)" }}
+          transition={{ duration: 0.4, ease: "circOut" }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+        >
+          {techStackStructured[activeCategory].map((tech, idx) => (
+            <motion.div
+              key={tech.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              className={`group relative ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-6 hover:shadow-2xl hover:shadow-teal-500/10 transition-all`}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3 rounded-xl bg-gradient-to-br ${tech.gradient} bg-opacity-10 group-hover:scale-110 transition-transform`}>
+                  <div className="text-white drop-shadow-md">{tech.icon}</div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {techs.map((tech) => (
-                    <div key={tech.name} className={`group relative ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-6 hover:border-transparent transition-all overflow-hidden`}>
-                      <div className={`absolute inset-0 bg-gradient-to-r ${tech.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`} style={{ padding: '1px', borderRadius: '1rem' }}><div className={`w-full h-full ${themeClasses.cardBg} rounded-2xl`} /></div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className={`p-3 rounded-xl bg-white/5 ${tech.color} group-hover:scale-110 transition-transform`}>{tech.icon}</div>
-                      </div>
-                      <h4 className={`text-lg font-bold ${themeClasses.text} mb-2`}>{tech.name}</h4>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
-                        <div className={`w-1.5 h-1.5 rounded-full bg-current ${tech.color}`} />
-                        <span>Utilisé dans {tech.projects} projets</span>
-                      </div>
-                      <div className="absolute bottom-0 left-0 w-full h-1.5 bg-gray-800">
-                        <div className={`h-full bg-gradient-to-r ${tech.gradient}`} style={{ width: '100%' }} />
-                      </div>
-                    </div>
-                  ))}
+                <div className="text-[10px] font-mono text-gray-500 border border-gray-800 px-2 py-1 rounded">
+                   {tech.projects} PROJETS
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </SectionWrapper>
+              
+              <h4 className={`text-lg font-bold ${themeClasses.text} mb-1`}>{tech.name}</h4>
+              
+              {/* Barre de progression subtile */}
+              <div className="mt-4 w-full h-1 bg-gray-800 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                  className={`h-full bg-gradient-to-r ${tech.gradient}`}
+                />
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  </div>
+</SectionWrapper>
+
 
       {/* --- PASSIONS (AVEC IMAGES CINÉMATIQUES) --- */}
       <SectionWrapper id="passions" className={`py-24 ${themeClasses.sectionBgDarker} relative overflow-hidden transition-colors duration-300`}>
