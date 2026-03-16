@@ -556,7 +556,7 @@ const App = () => {
       locations: [
         { name: "Le Caire (La civilisation)", desc: "Une métropole bouillonnante et historique qui ne dort jamais. Les lumières, les Pyramides de Gizeh à l'horizon et une énergie urbaine incroyable.", icon: <Users className="w-5 h-5" />, img: "/images/passions/lecaire.png" },
         { name: "Alexandrie (La nocturne)", desc: "Une ville côtière inexplicable. Ici, la vie commence vraiment à 22h. Une vibe particulière face à la mer qui ne s'explique pas, elle se vit.", icon: <Moon className="w-5 h-5" />, img: "/images/passions/alexa.png" },
-        { name: "Marassi (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
+        { name: "Hurghada (Le paradis moderne)", desc: "La nouvelle ville extraordinaire. Eau turquoise paradisiaque, Jet Ski, buildings modernes. Le luxe au bord de la Méditerranée.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/sahel.jpg" }
       ]
     },
     morocco: {
@@ -567,7 +567,7 @@ const App = () => {
       bgImage: "/images/passions/casa.png",
       locations: [
         { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/hassan2.jpg" },
-        { name: "Marrakech (L'Aventure)", desc: "L'hôtel, la piscine, les toboggans et l'effervescence unique de la place Jamaa el-Fna le soir.", icon: <Sun className="w-5 h-5" />, img: "/images/passions/mamara.png" },
+        { name: "Agadir (La classe)", desc: "La modernité d'Agadir Bay, une Coupe d'Afrique des Nations vécu en 2025 tout simplement historique et des soirées formidables", icon: <Sun className="w-5 h-5" />, img: "/images/passions/mamara.png" },
         { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.png" }
       ]
     }
@@ -664,7 +664,7 @@ const App = () => {
           <TiltCard className="p-4">
             <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0, x: -50 }, visible: { opacity: 1, x: 0, transition: { staggerChildren: 0.1 } } }}>
               <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-teal-500 font-bold mb-4 tracking-widest uppercase text-sm border-l-4 border-teal-500 pl-3">
-                Portfolio 2025
+                Portfolio 2026
               </motion.p>
               <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-5xl md:text-8xl font-black mb-6 leading-tight tracking-tighter">
                 <span className={themeClasses.text}>Mohamed</span> <br />
@@ -1228,7 +1228,7 @@ const App = () => {
                   <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines paternelles</span>
                     <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Égypte</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Le Caire, Alexandrie & Marassi <ArrowRight className="w-4 h-4" /></p>
+                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Le Caire, Alexandrie & Hurghada <ArrowRight className="w-4 h-4" /></p>
                   </div>
                 </div>
                 <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
@@ -1237,7 +1237,7 @@ const App = () => {
                   <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines maternelles</span>
                     <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Maroc</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Casa, Marrakech & Nador <ArrowRight className="w-4 h-4" /></p>
+                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Casa, Agadir & Nador <ArrowRight className="w-4 h-4" /></p>
                   </div>
                 </div>
               </div>
@@ -1450,7 +1450,7 @@ const App = () => {
       </SectionWrapper>
 
       <footer className={`py-8 border-t ${themeClasses.inputBorder} text-center ${themeClasses.textMuted} text-sm ${themeClasses.sectionBgAlt}`}>
-        <p>© 2025 Mohamed Kosbar. Tous droits réservés.</p>
+        <p>© 2026 Mohamed Kosbar. Tous droits réservés.</p>
         <p className="text-xs mt-1">Code source protégé par le droit d'auteur.</p>
       </footer>
     </div>
