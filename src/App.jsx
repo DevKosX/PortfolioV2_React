@@ -304,14 +304,32 @@ const App = () => {
   const experiencesData = [
     { 
         id: 1,
-        title: "Stage Développement Web", 
+        title: "Stage Développement SE", 
+        company: "Université Paris Cité",
+        date: "Avr 2026 - Juil 2026", 
+        desc: "Développement d'un drone de surface autonome (USV) pour la mesure de la qualité de l'eau de la Seine.", 
+        fullDesc: "Développement d'un drone de surface autonome (USV) pour la mesure de la qualité de l'eau de la Seine, incluant la conception du système embarqué et la création d'une interface de suivi des données dans le cadre d'un projet multi-partenarial. Ce stage m'a permis de travailler sur des technologies de pointe en IoT et embarqué, avec un impact environnemental direct.",
+        skills: ["Systèmes Embarqués", "Python", "Développement Full-Stack", "Interface de suivi développés", "Projet multi-partenarial"],
+        realizations: [
+            "Conception et développement du système embarqué du drone USV.",
+            "Création de l'interface de suivi des données en temps réel.",
+            "Intégration des capteurs de qualité de l'eau.",
+            "Collaboration avec les partenaires du projet."
+        ],
+        images: ["/images/drone-seine.jpg"],
+        icon: <Cpu />, 
+        color: "text-blue-500" 
+    },
+    { 
+        id: 2,
+        title: "Stage Développement Full-Stack", 
         company: "Devea SAS",
         date: "Jan 2025 - Mars 2025", 
         desc: "Développement Full-Stack Laravel PHP & France Academy.", 
-        fullDesc: "J'ai effectué un stage intensif au sein de l'entreprise Devea, intégré à l'équipe de développement. Ce stage a été une véritable immersion professionnelle, centrée sur le développement d’un ERP interne et la participation au projet France Academy. J'ai travaillé principalement avec le framework Laravel (PHP) sur des modules métiers (gestion utilisateurs, formations, tableaux de bord). Cette expérience a renforcé mes compétences back-end et ma compréhension de l'architecture d'entreprise.",
+        fullDesc: "J'ai effectué un stage intensif au sein de l'entreprise Devea, intégré à l'équipe de développement. Ce stage a été une véritable immersion professionnelle, centrée sur le développement d'un ERP interne et la participation au projet France Academy. J'ai travaillé principalement avec le framework Laravel (PHP) sur des modules métiers (gestion utilisateurs, formations, tableaux de bord). Cette expérience a renforcé mes compétences back-end et ma compréhension de l'architecture d'entreprise.",
         skills: ["Laravel (PHP)", "MySQL", "Architecture MVC", "Méthode Agile SCRUM", "Git/GitLab"],
         realizations: [
-            "Participation au développement de l’ERP interne (modules utilisateurs, gestion des droits).",
+            "Participation au développement de l'ERP interne (modules utilisateurs, gestion des droits).",
             "Implémentation de fonctionnalités pour le projet France Academy.",
             "Écriture de requêtes optimisées et contrôleurs Laravel.",
             "Tests fonctionnels et corrections de bugs."
@@ -321,7 +339,7 @@ const App = () => {
         color: "text-cyan-500" 
     },
     { 
-        id: 2,
+        id: 3,
         title: "Staff Technique & Organisation", 
         company: "24H de l'Info - IUT Villetaneuse",
         date: "Mai 2024 - Juin 2024", 
@@ -338,26 +356,9 @@ const App = () => {
         icon: <Users />, 
         color: "text-yellow-400" 
     },
-    { 
-              id: 4,
-        title: "Développeur Full-Stack (BUT)", 
-        company: "Projets Académiques & Personnels",
-        date: "2023 - Présent", 
-        desc: "3 ans d'apprentissage intensif et de projets concrets.", 
-        fullDesc: "Depuis mon entrée en BUT Informatique, j'ai réalisé énormément de projets académiques et personnels. J'ai conçu des architectures mobiles et web complexes, en essayant toujours de réfléchir comme un développeur Full Stack confirmé. J'ai fait preuve d'une grande autonomie pour apprendre de nouvelles technologies (Flutter, React, Spring) en dehors du cursus classique.",
-        skills: ["Autonomie", "Architecture Logicielle", "Full Stack (Java/JS)", "Mobile (Flutter)", "Auto-formation"],
-        realizations: [
-            "Développement d'applications mobiles complètes.",
-            "Conception d'architectures Back-end robustes.",
-            "Veille technologique constante."
-        ],
-        images: ["/images/frigo.webp", "/images/find.jpg"],
-        icon: <Code2 />, 
-        color: "text-teal-500" 
-    },
-    {   
+        {   
                
-        id: 3,
+        id: 4,
         title: "Assistant Coach U11", 
         company: "ASJA (Aubervilliers)",
         date: "Oct 2021 - Mai 2022", 
@@ -570,7 +571,45 @@ const App = () => {
         { name: "Agadir (La classe)", desc: "La modernité d'Agadir Bay, une Coupe d'Afrique des Nations vécu en 2025 tout simplement historique et des soirées formidables", icon: <Sun className="w-5 h-5" />, img: "/images/passions/mamara.png" },
         { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.png" }
       ]
-    }
+    },
+    // --- NOUVELLES DONNÉES À AJOUTER ---
+    football: {
+    title: "Le Football",
+    subtitle: "U17 Nationaux & Résilience",
+    color: "from-green-600 to-emerald-900",
+    // Correction de l'accent pour Cyan comme demandé dans ton texte
+    accent: "text-cyan-500", 
+    bgImage: "/images/passions/football.jpg",
+    // Ton nouveau texte nettoyé et splitté en paragraphes
+    paragraphs: [
+      "Le football est bien plus qu'un sport pour moi c'est ma passion. J'ai eu la chance au cours de ma jeunesse d'atteindre un excellent niveau en évoluant en U17 Nationaux avec Aubervilliers (Génération 2005). Le club de l'ASJA était comme une seconde maison. J’y passais tout mon temps libre, non seulement pour jouer, mais aussi pour apprendre, progresser, comprendre la tactique et me dépasser chaque jour.",
+      "Malheureusement à l'age de mes 16 ans, j'ai eu la maladie d’Osgood, c'est une sorte de blessure au genou pendant la croissance qui est venu freiné mon rêve de devenir footballeur professionnel en m'éloignant une longue période des terrains de foot. J’étais loin d’être le plus doué, mais j’essayais toujours de me donner à fond et de travailler pour atteindre mes objectifs c’est aussi le profil que je retrouve dans l’informatique. J’essayais d’être le plus régulier et la personne la plus motivée possible."
+    ],
+    locations: [
+      { name: "Compétition", desc: "La rigueur du niveau National.", icon: <Trophy className="w-5 h-5" />, img: "/images/passions/football1.jpg" },
+      { name: "Mental", desc: "La résilience face à la blessure.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/football2.jpg" },
+      // --- AJOUT DE LA 3ÈME IMAGE ---
+      { name: "Formation", desc: "L'apprentissage au club de l'ASJA.", icon: <Briefcase className="w-5 h-5" />, img: "/images/passions/football3.jpg" }
+    ]
+  },
+  natation: {
+    title: "La Natation",
+    subtitle: "Discipline & Second Souffle",
+    color: "from-teal-600 to-cyan-900",
+    accent: "text-teal-400",
+    bgImage: "/images/passions/natation.jpg",
+    paragraphs: [
+      "De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité pour mes meilleurs années de football.",
+      "Aujourd'hui, je nage partout : de l'Atlantique à la Mer Rouge, en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée, c'est l'une de mes passions préférés."
+    ],
+    locations: [
+      { name: "Progression", desc: "Du débutant au compétiteur.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/natation1.jpg" },
+      { name: "Exploration", desc: "Nager dans les plus beaux spots.", icon: <Globe className="w-5 h-5" />, img: "/images/passions/natation2.jpg" },
+      // --- AJOUT DE LA 3ÈME IMAGE ---
+      { name: "Apnée", desc: "Dépassement de soi sous l'eau.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/natation3.jpg" }
+    ]
+  }
+
   };
 
   
@@ -588,7 +627,7 @@ const App = () => {
 
   ];
 
-  const techStackStructured = { "Langages & Fondamentaux": [ { name: "HTML / CSS", projects: "12+", icon: <Layout />, color: "text-orange-400", gradient: "from-orange-400 to-red-500" }, { name: "JavaScript", projects: 6, icon: <FileCode />, color: "text-yellow-400", gradient: "from-yellow-400 to-orange-500" }, { name: "Java", projects: 5, icon: <Code2 />, color: "text-orange-500", gradient: "from-orange-500 to-red-600" }, { name: "SQL", projects: 5, icon: <Database />, color: "text-pink-400", gradient: "from-pink-400 to-rose-600" }, { name: "PHP", projects: 4, icon: <Terminal />, color: "text-indigo-400", gradient: "from-indigo-400 to-purple-600" }, { name: "Python", projects: 3, icon: <Code2 />, color: "text-emerald-400", gradient: "from-emerald-400 to-green-600" }, { name: "Bash", projects: 3, icon: <Terminal />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Dart", projects: 2, icon: <Smartphone />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "TypeScript", projects: 1, icon: <FileCode />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "C++", projects: 1, icon: <Braces />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-700" }, ], "Frameworks & Web": [ { name: "AJAX / JSON", projects: 6, icon: <FileJson />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Bootstrap", projects: 4, icon: <Layout />, color: "text-purple-500", gradient: "from-purple-500 to-indigo-600" }, { name: "Tailwind CSS", projects: 3, icon: <Layout />, color: "text-cyan-400", gradient: "from-cyan-400 to-teal-500" }, { name: "API REST", projects: 3, icon: <Globe />, color: "text-green-400", gradient: "from-green-400 to-teal-500" }, { name: "Laravel", projects: 2, icon: <Layers />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "React", projects: 2, icon: <Globe />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "Flutter", projects: 2, icon: <Smartphone />, color: "text-sky-400", gradient: "from-sky-400 to-blue-600" }, { name: "Node.js", projects: 2, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Blade", projects: 2, icon: <FileCode />, color: "text-red-400", gradient: "from-red-400 to-orange-500" }, { name: "Spring Boot", projects: 1, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-700" }, { name: "Flask", projects: 1, icon: <Server />, color: "text-gray-300", gradient: "from-gray-300 to-gray-500" }, { name: "JWT", projects: 1, icon: <Lock />, color: "text-yellow-500", gradient: "from-yellow-500 to-amber-600" }, { name: "jQuery", projects: 1, icon: <FileJson />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-500" }, ], "Architecture & Conception": [ { name: "UML", projects: 8, icon: <Activity />, color: "text-yellow-600", gradient: "from-yellow-600 to-amber-700" }, { name: "MVC", projects: "5+", icon: <Layers />, color: "text-indigo-500", gradient: "from-indigo-500 to-purple-600" }, { name: "SOLID", projects: 5, icon: <ShieldCheck />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" }, { name: "MVVM", projects: "4+", icon: <Smartphone />, color: "text-rose-500", gradient: "from-rose-500 to-pink-600" }, { name: "Clean Code", projects: 3, icon: <Sparkles />, color: "text-teal-500", gradient: "from-teal-500 to-emerald-600" }, { name: "TDD", projects: 2, icon: <CheckCircle2 />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, ], "Données & Stockage": [ { name: "MySQL", projects: 6, icon: <Database />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" }, { name: "phpMyAdmin", projects: 4, icon: <Settings />, color: "text-orange-300", gradient: "from-orange-300 to-yellow-500" }, { name: "PostgreSQL", projects: 3, icon: <Database />, color: "text-indigo-400", gradient: "from-indigo-400 to-blue-500" }, { name: "SQLite", projects: 2, icon: <HardDrive />, color: "text-sky-400", gradient: "from-sky-400 to-blue-500" }, { name: "Firebase", projects: 2, icon: <Cloud />, color: "text-yellow-500", gradient: "from-yellow-500 to-orange-600" }, { name: "MongoDB", projects: 1, icon: <Database />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Redis", projects: 1, icon: <Database />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, ], "DevOps, Outils & Serveurs": [ { name: "Git / GitHub", projects: 12, icon: <GitBranch />, color: "text-orange-600", gradient: "from-orange-600 to-red-600" }, { name: "Linux", projects: 8, icon: <Terminal />, color: "text-yellow-300", gradient: "from-yellow-300 to-amber-500" }, { name: "Maven", projects: 4, icon: <Wrench />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "Jira / Freedcamp", projects: 3, icon: <Layout />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-600" }, { name: "VirtualBox", projects: 3, icon: <Box />, color: "text-blue-300", gradient: "from-blue-300 to-indigo-400" }, { name: "GitLab", projects: 2, icon: <GitBranch />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Docker", projects: 2, icon: <Box />, color: "text-blue-500", gradient: "from-blue-500 to-indigo-600" }, { name: "Composer", projects: 2, icon: <Box />, color: "text-amber-600", gradient: "from-amber-600 to-orange-700" }, { name: "Postman", projects: 2, icon: <Send />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Vagrant", projects: 2, icon: <Box />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "Figma / Readdy", projects: 2, icon: <Layout />, color: "text-purple-400", gradient: "from-purple-400 to-pink-500" }, { name: "Jenkins", projects: 1, icon: <Settings />, color: "text-red-300", gradient: "from-red-300 to-orange-400" }, { name: "Nginx", projects: 1, icon: <Server />, color: "text-green-400", gradient: "from-green-400 to-emerald-500" }, { name: "Apache Tomcat", projects: 1, icon: <Server />, color: "text-yellow-600", gradient: "from-yellow-600 to-orange-700" }, ], "IDE & Productivité": [ { name: "VS Code", projects: 12, icon: <Monitor />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "IntelliJ IDEA", projects: 10, icon: <Monitor />, color: "text-purple-500", gradient: "from-purple-500 to-pink-600" }, { name: "Prompt IA", projects: 7, icon: <Sparkles />, color: "text-fuchsia-400", gradient: "from-fuchsia-400 to-purple-600" }, { name: "NetBeans", projects: 2, icon: <Layout />, color: "text-teal-400", gradient: "from-teal-400 to-green-500" }, { name: "Xcode", projects: 1, icon: <Monitor />, color: "text-blue-300", gradient: "from-blue-300 to-sky-400" }, ] };
+  const techStackStructured = { "Langages & Fondamentaux": [ { name: "HTML / CSS", projects: "12+", icon: <Layout />, color: "text-orange-400", gradient: "from-orange-400 to-red-500" }, { name: "JavaScript", projects: 6, icon: <FileCode />, color: "text-yellow-400", gradient: "from-yellow-400 to-orange-500" }, { name: "Java", projects: 5, icon: <Code2 />, color: "text-orange-500", gradient: "from-orange-500 to-red-600" }, { name: "SQL", projects: 5, icon: <Database />, color: "text-pink-400", gradient: "from-pink-400 to-rose-600" }, { name: "PHP", projects: 4, icon: <Terminal />, color: "text-indigo-400", gradient: "from-indigo-400 to-purple-600" }, { name: "Python", projects: 3, icon: <Code2 />, color: "text-emerald-400", gradient: "from-emerald-400 to-green-600" }, { name: "Bash", projects: 3, icon: <Terminal />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Dart", projects: 2, icon: <Smartphone />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "TypeScript", projects: 1, icon: <FileCode />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "C++", projects: 1, icon: <Braces />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-700" }, ], "Frameworks & Web": [ { name: "AJAX / JSON", projects: 6, icon: <FileJson />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Bootstrap", projects: 4, icon: <Layout />, color: "text-purple-500", gradient: "from-purple-500 to-indigo-600" }, { name: "Tailwind CSS", projects: 3, icon: <Layout />, color: "text-cyan-400", gradient: "from-cyan-400 to-teal-500" }, { name: "API REST", projects: 3, icon: <Globe />, color: "text-cyan-500", gradient: "from-cyan-500 to-teal-500" }, { name: "Laravel", projects: 2, icon: <Layers />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "React", projects: 2, icon: <Globe />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "Flutter", projects: 2, icon: <Smartphone />, color: "text-sky-400", gradient: "from-sky-400 to-blue-600" }, { name: "Node.js", projects: 2, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Blade", projects: 2, icon: <FileCode />, color: "text-red-400", gradient: "from-red-400 to-orange-500" }, { name: "Spring Boot", projects: 1, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-700" }, { name: "Flask", projects: 1, icon: <Server />, color: "text-gray-300", gradient: "from-gray-300 to-gray-500" }, { name: "JWT", projects: 1, icon: <Lock />, color: "text-yellow-500", gradient: "from-yellow-500 to-amber-600" }, { name: "jQuery", projects: 1, icon: <FileJson />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-500" }, ], "Architecture & Conception": [ { name: "UML", projects: 8, icon: <Activity />, color: "text-yellow-600", gradient: "from-yellow-600 to-amber-700" }, { name: "MVC", projects: "5+", icon: <Layers />, color: "text-indigo-500", gradient: "from-indigo-500 to-purple-600" }, { name: "SOLID", projects: 5, icon: <ShieldCheck />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "MVVM", projects: "4+", icon: <Smartphone />, color: "text-rose-500", gradient: "from-rose-500 to-pink-600" }, { name: "Clean Code", projects: 3, icon: <Sparkles />, color: "text-teal-500", gradient: "from-teal-500 to-emerald-600" }, { name: "TDD", projects: 2, icon: <CheckCircle2 />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, ], "Données & Stockage": [ { name: "MySQL", projects: 6, icon: <Database />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "phpMyAdmin", projects: 4, icon: <Settings />, color: "text-orange-300", gradient: "from-orange-300 to-yellow-500" }, { name: "PostgreSQL", projects: 3, icon: <Database />, color: "text-indigo-400", gradient: "from-indigo-400 to-blue-500" }, { name: "SQLite", projects: 2, icon: <HardDrive />, color: "text-sky-400", gradient: "from-sky-400 to-blue-500" }, { name: "Firebase", projects: 2, icon: <Cloud />, color: "text-yellow-500", gradient: "from-yellow-500 to-orange-600" }, { name: "MongoDB", projects: 1, icon: <Database />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Redis", projects: 1, icon: <Database />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, ], "DevOps, Outils & Serveurs": [ { name: "Git / GitHub", projects: 12, icon: <GitBranch />, color: "text-orange-600", gradient: "from-orange-600 to-red-600" }, { name: "Linux", projects: 8, icon: <Terminal />, color: "text-yellow-300", gradient: "from-yellow-300 to-amber-500" }, { name: "Maven", projects: 4, icon: <Wrench />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "Jira / Freedcamp", projects: 3, icon: <Layout />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "VirtualBox", projects: 3, icon: <Box />, color: "text-blue-300", gradient: "from-blue-300 to-indigo-400" }, { name: "GitLab", projects: 2, icon: <GitBranch />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Docker", projects: 2, icon: <Box />, color: "text-blue-500", gradient: "from-blue-500 to-indigo-600" }, { name: "Composer", projects: 2, icon: <Box />, color: "text-amber-600", gradient: "from-amber-600 to-orange-700" }, { name: "Postman", projects: 2, icon: <Send />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Vagrant", projects: 2, icon: <Box />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "Figma / Readdy", projects: 2, icon: <Layout />, color: "text-purple-400", gradient: "from-purple-400 to-pink-500" }, { name: "Jenkins", projects: 1, icon: <Settings />, color: "text-red-300", gradient: "from-red-300 to-orange-400" }, { name: "Nginx", projects: 1, icon: <Server />, color: "text-cyan-500", gradient: "from-cyan-500 to-emerald-500" }, { name: "Apache Tomcat", projects: 1, icon: <Server />, color: "text-yellow-600", gradient: "from-yellow-600 to-orange-700" }, ], "IDE & Productivité": [ { name: "VS Code", projects: 12, icon: <Monitor />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "IntelliJ IDEA", projects: 10, icon: <Monitor />, color: "text-purple-500", gradient: "from-purple-500 to-pink-600" }, { name: "Prompt IA", projects: 7, icon: <Sparkles />, color: "text-fuchsia-400", gradient: "from-fuchsia-400 to-purple-600" }, { name: "NetBeans", projects: 2, icon: <Layout />, color: "text-teal-400", gradient: "from-teal-400 to-green-500" }, { name: "Xcode", projects: 1, icon: <Monitor />, color: "text-blue-300", gradient: "from-blue-300 to-sky-400" }, ] };
 
   return (
     <div className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} font-sans overflow-x-hidden transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200`}>
@@ -598,7 +637,7 @@ const App = () => {
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold relative z-50 group cursor-pointer">
             <span className={`${themeClasses.text} group-hover:text-teal-400 transition-colors`}>MK</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">.DEV</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">.DEV</span>
           </h1>
                   
           <div className={`hidden md:flex space-x-6 text-xs md:text-sm font-medium ${themeClasses.textMuted}`}>
@@ -671,7 +710,7 @@ const App = () => {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-500 to-teal-600 animate-gradient-x">Kosbar</span>
               </motion.h1>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className={`${themeClasses.textMuted} text-xl mb-8 max-w-lg leading-relaxed h-16 font-light`}>
-                 <Typewriter text={["Spécialisé en Java, React & DevOps.", "Disponible pour un stage de 14 semaines."]} /></motion.div>
+                 <Typewriter text={["Spécialisé en Java, React & DevOps.", "Recherche alternance Big Data/Cyber Sécurité 2026/27."]} /></motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="flex flex-col sm:flex-row gap-6">
                 <a href="#projets" className={`px-8 py-4 font-bold rounded-full transition-all text-center flex items-center justify-center gap-2 hover:scale-105 active:scale-95 shadow-xl shadow-teal-500/20 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>
                     Explorer <ArrowRight className="w-4 h-4" />
@@ -687,7 +726,7 @@ const App = () => {
           <TiltCard className="relative flex justify-center mt-8 lg:mt-0">
             <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className={`w-64 h-64 md:w-96 md:h-96 rounded-full border border-teal-500/30 border-dashed absolute`} />
              <motion.div animate={{ rotate: -360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className={`w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full border border-cyan-500/20 absolute`} />
-            <div className={`w-64 h-64 md:w-80 md:h-80 bg-gradient-to-tr from-teal-500/20 to-cyan-600/20 rounded-full border ${themeClasses.navBorder} backdrop-blur-3xl flex items-center justify-center shadow-2xl shadow-teal-500/20 relative z-10`}>
+            <div className={`w-64 h-64 md:w-80 md:h-80 bg-gradient-to-tr from-teal-500/20 to-cyan-500/20 rounded-full border ${themeClasses.navBorder} backdrop-blur-3xl flex items-center justify-center shadow-2xl shadow-teal-500/20 relative z-10`}>
               <div className={`w-2/3 h-2/3 ${isDarkMode ? 'bg-black/80' : 'bg-white/80'} rounded-full flex items-center justify-center border ${isDarkMode ? 'border-white/5' : 'border-black/5'} relative`}>
                 <Code2 className="w-20 h-20 text-teal-500" />
                 <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="absolute inset-0">
@@ -708,7 +747,7 @@ const App = () => {
           <div className="text-center mb-16 relative">
             <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} className="absolute -top-10 left-1/2 -translate-x-1/2 text-teal-500/20"><ScanLine className="w-32 h-32" /></motion.div>
             <h2 className="text-4xl md:text-5xl font-extrabold mb-4 relative z-10">
-              <span className={themeClasses.text}>Identité</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Détectée</span>
+              <span className={themeClasses.text}>Identité</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">Détectée</span>
             </h2>
             <div className={`flex items-center justify-center gap-2 ${scanComplete ? 'text-green-500' : 'text-teal-500'} font-mono text-sm`}>
                 <span className={!scanComplete ? "animate-pulse" : ""}>●</span> {scanComplete ? "IDENTITÉ CONFIRMÉ" : "SCAN EN COURS..."}
@@ -785,7 +824,7 @@ const App = () => {
                       <span>INTÉGRÉ AU SYSTÈME</span><span>100%</span>
                   </div>
                   <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                      <div className={`h-full bg-gradient-to-r ${scanComplete ? 'from-green-600 to-green-400' : 'from-teal-500 to-cyan-400'} w-full transition-colors duration-500`} />
+                      <div className={`h-full bg-gradient-to-r ${scanComplete ? 'from-green-600 to-cyan-500' : 'from-teal-500 to-cyan-400'} w-full transition-colors duration-500`} />
                   </div>
                 </div>
               </motion.div>
@@ -837,7 +876,7 @@ const App = () => {
                <span className="text-xs font-bold text-teal-600 uppercase tracking-widest">Chronologie</span>
              </div>
              <h2 className="text-4xl md:text-5xl font-extrabold mb-16 tracking-tight">
-               <span className={themeClasses.text}>Mon</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Parcours</span>
+               <span className={themeClasses.text}>Mon</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">Parcours</span>
              </h2>
            </div>
 
@@ -1072,7 +1111,7 @@ const App = () => {
 
                 <div className={`pt-6 border-t ${themeClasses.cardBorder} flex flex-wrap gap-4 justify-end`}>
                   {selectedProject.website && (
-                    <a href={selectedProject.website} target="_blank" rel="noopener noreferrer" className="p-4 bg-gradient-to-r from-cyan-600 to-teal-500 text-white rounded-full hover:scale-110 transition-transform shadow-lg border border-white/10 group flex items-center gap-2">
+                    <a href={selectedProject.website} target="_blank" rel="noopener noreferrer" className="p-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-full hover:scale-110 transition-transform shadow-lg border border-white/10 group flex items-center gap-2">
                       <Smartphone className="w-8 h-8 group-hover:text-white transition-colors" />
                     </a>
                   )}
@@ -1097,7 +1136,7 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col items-center mb-16">
              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-center">
-               <span className={themeClasses.text}>Projets</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Réalisés</span>
+               <span className={themeClasses.text}>Projets</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">Réalisés</span>
              </h2>
              <p className={`${themeClasses.textMuted} text-center max-w-xl`}>Une galerie de mes réalisations, alliant technique et créativité.</p>
           </div>
@@ -1134,7 +1173,7 @@ const App = () => {
   <div className="max-w-7xl mx-auto px-6 relative z-10">
     <div className="text-center mb-16">
       <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-        <span className={themeClasses.text}>Arsenal</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Technique</span>
+        <span className={themeClasses.text}>Arsenal</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">Technique</span>
       </h2>
       <p className={themeClasses.textMuted}>Une expertise segmentée pour des solutions complètes.</p>
     </div>
@@ -1153,7 +1192,7 @@ const App = () => {
             {activeCategory === cat && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl shadow-lg"
+                className="absolute inset-0 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl shadow-lg"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
@@ -1211,135 +1250,188 @@ const App = () => {
 </SectionWrapper>
 
 
-      {/* --- PASSIONS (AVEC IMAGES CINÉMATIQUES) --- */}
-      <SectionWrapper id="passions" className={`py-24 ${themeClasses.sectionBgDarker} relative overflow-hidden transition-colors duration-300`}>
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-16 text-center">
-            <span className={themeClasses.text}>Mes</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Passions</span> & Inspirations
-          </h2>
+    {/* --- PASSIONS (AVEC IMAGES CINÉMATIQUES) --- */}
+<SectionWrapper id="passions" className={`py-24 ${themeClasses.sectionBgDarker} relative overflow-hidden transition-colors duration-300`}>
+<div className="max-w-6xl mx-auto px-6 relative z-10">
+  <h2 className="text-4xl md:text-5xl font-extrabold mb-16 text-center">
+    <span className={themeClasses.text}>Mes</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">Passions</span> & Inspirations
+  </h2>
 
-          <div className="mb-24">
-            <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}><Plane className="w-6 h-6 text-teal-500" /> Odyssée Culturelle</h3>
-            {!activeTrip && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-96 transition-all duration-500 ease-in-out">
-                <div onClick={() => setActiveTrip('egypt')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-amber-500/50 transition-all duration-300">
-                  <img src="/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
-                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines paternelles</span>
-                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Égypte</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Le Caire, Alexandrie & Hurghada <ArrowRight className="w-4 h-4" /></p>
-                  </div>
-                </div>
-                <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
-                  <img src="/images/passions/casa.png" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" onError={(e) => e.target.style.display='none'} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors duration-300" />
-                  <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Mes origines maternelles</span>
-                    <h4 className="text-4xl md:text-5xl font-extrabold text-white mb-2">Maroc</h4>
-                    <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2">Découvrir Casa, Agadir & Nador <ArrowRight className="w-4 h-4" /></p>
-                  </div>
-                </div>
-              </div>
-            )}
-            {activeTrip && (
-              <div className={`relative w-full bg-slate-800 rounded-3xl overflow-hidden shadow-2xl border ${themeClasses.cardBorder} animate-in fade-in slide-in-from-bottom-10 duration-500`}>
-                <div className={`relative h-48 md:h-64 overflow-hidden`}>
-                  <img src={tripDetails[activeTrip].bgImage} className="w-full h-full object-cover opacity-40 blur-sm" onError={(e) => e.target.style.display='none'} />
-                  <div className={`absolute inset-0 bg-gradient-to-b ${tripDetails[activeTrip].color} opacity-60 mix-blend-multiply`} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                      <h3 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tight drop-shadow-lg">{tripDetails[activeTrip].title}</h3>
-                      <p className="text-xl text-white/90 font-light italic">{tripDetails[activeTrip].subtitle}</p>
-                  </div>
-                  <button onClick={() => setActiveTrip(null)} className="absolute top-4 right-4 bg-black/50 hover:bg-white/20 p-2 rounded-full text-white transition-all backdrop-blur-md z-20"><X className="w-6 h-6" /></button>
-                </div>
-                <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {tripDetails[activeTrip].locations.map((loc, idx) => (
-                      <div key={idx} className="group bg-slate-900/50 rounded-xl p-4 hover:bg-slate-900 transition-colors duration-300 border border-transparent hover:border-gray-700">
-                        <div className="h-40 w-full rounded-lg overflow-hidden mb-4 relative">
-                            <img src={loc.img} alt={loc.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onError={(e) => e.target.style.display='none'} />
-                            <div className={`absolute top-2 right-2 bg-black/70 p-1.5 rounded-lg text-white`}>{loc.icon}</div>
-                        </div>
-                        <h5 className={`text-xl font-bold ${tripDetails[activeTrip].accent} mb-2`}>{loc.name}</h5>
-                        <p className={`${themeClasses.textMuted} text-sm leading-relaxed text-justify`}>{loc.desc}</p>
-                      </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            {/* CARTE FOOTBALL - IMAGE BACKGROUND */}
-            <div className={`md:col-span-2 relative overflow-hidden rounded-2xl border ${themeClasses.cardBorder} p-8 group hover:border-green-500/50 transition-all shadow-2xl`}>
-               {/* Background Image with Overlay */}
-               <img src="/images/passions/football.jpg" alt="Football" className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-opacity duration-700 ease-in-out" onError={(e) => {e.target.style.display='none'; e.target.parentNode.style.backgroundColor='#064e3b';}} />
-               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent opacity-90 z-0 pointer-events-none" />
-               
-               <div className="relative z-10">
-                   <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity"><Trophy className="w-48 h-48 text-green-500" /></div>
-                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3"><HeartPulse className="w-6 h-6 text-green-500" /> Le Football, une école de vie</h3>
-                   <div className="space-y-4 text-gray-300 leading-relaxed text-justify">
-                     <p>Le football est bien plus qu'un sport pour moi. J'ai eu la chance d'atteindre un excellent niveau en évoluant en <span className="text-green-400 font-bold">U17 Nationaux avec Aubervilliers (Génération 2005)</span>. C'était l'école de la rigueur, de la tactique et du dépassement de soi.</p>
-                     <p>Malheureusement, une blessure (la maladie d'Osgood-Schlatter) a freiné cette ascension. Mais cette épreuve m'a appris la résilience. J'ai transféré cette compétitivité et cette soif d'apprendre dans mes études et le développement informatique. Aujourd'hui, je code avec la même intensité que je jouais sur le terrain.</p>
-                   </div>
-               </div>
-            </div>
-
-            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-red-500/30 transition-all shadow-md`}>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Tv className="w-6 h-6 text-red-500" /> Cinéphile</h3>
-               <div className="space-y-6">
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/st.jpg" alt="Stranger Things" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-red-500 transition-colors`}>Stranger Things</h4><p className={`text-xs ${themeClasses.textMuted}`}>Mystère & Années 80</p></div>
-                 </div>
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/passions/echo.webp" alt="Echoes of the Past" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-yellow-500 transition-colors`}>Echoes of the Past</h4><p className={`text-xs ${themeClasses.textMuted}`}>Drame Égyptien</p></div>
-                 </div>
-               </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* CARTE NATATION - IMAGE BACKGROUND */}
-            <div className={`md:col-span-2 relative overflow-hidden rounded-2xl border ${themeClasses.cardBorder} p-8 group hover:border-teal-500/50 transition-all shadow-2xl`}>
-               <img src="/images/passions/natation.jpg" alt="Natation" className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-opacity duration-700 ease-in-out" onError={(e) => {e.target.style.display='none'; e.target.parentNode.style.backgroundColor='#115e59';}} />
-               <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent opacity-90 z-0 pointer-events-none" />
-
-               <div className="relative z-10">
-                   <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><Waves className="w-48 h-48 text-teal-500" /></div>
-                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3"><Waves className="w-6 h-6 text-teal-500" /> La Natation, mon second souffle</h3>
-                   <div className="space-y-4 text-gray-300 leading-relaxed text-justify">
-                     <p>De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité, des atouts majeurs pour mon jeu au football et c'est devenu une passion.</p>
-                     <p>Aujourd'hui, je nage partout : de l'Atlantique (Agadir, Deauville) à la Mer Rouge (Hurghada), en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée.</p>
-                   </div>
-               </div>
-            </div>
-
-            <div className={`${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-2xl p-8 flex flex-col justify-center hover:border-purple-500/30 transition-all shadow-md`}>
-               <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6 flex items-center gap-3`}><Gamepad2 className="w-6 h-6 text-purple-500" /> Gamer</h3>
-               <div className="space-y-6">
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/fm.avif" alt="Football Manager" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-purple-500 transition-colors`}>Football Manager</h4><p className={`text-xs ${themeClasses.textMuted}`}>Stratégie & Gestion</p></div>
-                 </div>
-                 <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-16 h-20 bg-gray-800 rounded-lg overflow-hidden shrink-0"><img src="/images/last.jpg" alt="The Last of Us" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" onError={(e) => e.target.style.display='none'} /></div>
-                    <div><h4 className={`${themeClasses.text} font-bold group-hover:text-green-500 transition-colors`}>The Last of Us</h4><p className={`text-xs ${themeClasses.textMuted}`}>Narratif & Émotion</p></div>
-                 </div>
-               </div>
-            </div>
+  {/* 1. SECTION VOYAGES (Égypte / Maroc) */}
+  <div className="mb-8">
+    <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}><Plane className="w-6 h-6 text-teal-500" /> Odyssée Culturelle</h3>
+    {!activeTrip && (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-96">
+        <div onClick={() => setActiveTrip('egypt')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-amber-500/50 transition-all duration-300">
+          <img src="/images/passions/jardin.jpg" alt="Egypte" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors" />
+          <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform">
+            <span className="text-amber-400 font-bold tracking-widest text-sm uppercase mb-2 block">Origines paternelles</span>
+            <h4 className="text-4xl font-extrabold text-white mb-2">Égypte</h4>
           </div>
         </div>
-      </SectionWrapper>
+        <div onClick={() => setActiveTrip('morocco')} className="relative rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-red-500/50 transition-all duration-300">
+          <img src="/images/passions/casa.png" alt="Maroc" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent group-hover:bg-black/60 transition-colors" />
+          <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform">
+            <span className="text-red-400 font-bold tracking-widest text-sm uppercase mb-2 block">Origines maternelles</span>
+            <h4 className="text-4xl font-extrabold text-white mb-2">Maroc</h4>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+
+  {/* 2. ZONE D'OUVERTURE (S'affiche quand on clique sur N'IMPORTE QUELLE carte) */}
+  <AnimatePresence mode="wait">
+    {activeTrip && (
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+        className={`relative w-full ${themeClasses.cardBg} rounded-3xl overflow-hidden shadow-2xl border ${themeClasses.cardBorder} mb-8 z-20`}
+      >
+        <div className={`relative h-64 md:h-80 overflow-hidden`}>
+          <img src={tripDetails[activeTrip].bgImage} className="w-full h-full object-cover blur-sm opacity-50 scale-110" />
+          <div className={`absolute inset-0 bg-gradient-to-b ${tripDetails[activeTrip].color} opacity-70`} />
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
+              <h3 className="text-5xl md:text-7xl font-black text-white mb-2 tracking-tighter">{tripDetails[activeTrip].title}</h3>
+              <p className="text-xl text-white/90 font-light italic">{tripDetails[activeTrip].subtitle}</p>
+          </div>
+          <button onClick={() => setActiveTrip(null)} className="absolute top-6 right-6 bg-black/50 p-3 rounded-full text-white z-30 border border-white/10"><X className="w-6 h-6" /></button>
+        </div>
+        <div className="p-8 md:p-12">
+          {tripDetails[activeTrip].paragraphs && (
+            <div className="max-w-4xl mx-auto space-y-6 text-lg leading-relaxed text-justify">
+              {tripDetails[activeTrip].paragraphs.map((para, i) => <p key={i} className={themeClasses.text}>{para}</p>)}
+            </div>
+          )}
+          {tripDetails[activeTrip].locations && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              {tripDetails[activeTrip].locations.map((loc, i) => (
+                <div key={i} className="bg-slate-900/40 rounded-2xl p-4 border border-white/5">
+                  <img src={loc.img} className="h-40 w-full object-cover rounded-xl mb-4" />
+                  <h5 className={`font-bold ${tripDetails[activeTrip].accent} mb-1`}>{loc.name}</h5>
+                  <p className="text-sm text-gray-400">{loc.desc}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+
+  {/* 3. DISPOSITION SPÉCIFIQUE : FOOTBALL / NATATION / CINÉ / GAMER */}
+  {!activeTrip && (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      {/* COLONNE GAUCHE + CENTRE (FOOTBALL & NATATION) */}
+      <div className="md:col-span-2 space-y-8">
+        
+        {/* CARTE FOOTBALL (Large) */}
+        <div onClick={() => setActiveTrip('football')} className="relative h-80 rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-green-500/50 transition-all duration-300">
+          <img src="/images/football.jpg" alt="Football" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent group-hover:bg-black/60 transition-colors" />
+          <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform">
+            <span className="text-cyan-500 font-bold tracking-widest text-sm uppercase mb-2 block flex items-center gap-2"><Trophy className="w-4 h-4"/> U17 Nationaux</span>
+            <h4 className="text-4xl font-extrabold text-white mb-2 tracking-tighter">Football</h4>
+            <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">Une école de rigueur et de résilience <ArrowRight className="w-4 h-4 inline" /></p>
+          </div>
+        </div>
+
+        {/* CARTE NATATION (Large) */}
+        <div onClick={() => setActiveTrip('natation')} className="relative h-80 rounded-3xl overflow-hidden cursor-pointer group shadow-2xl border border-transparent hover:border-teal-500/50 transition-all duration-300">
+          <img src="/images/natation.jpg" alt="Natation" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent group-hover:bg-black/60 transition-colors" />
+          <div className="absolute bottom-0 left-0 p-8 w-full translate-y-2 group-hover:translate-y-0 transition-transform">
+            <span className="text-teal-400 font-bold tracking-widest text-sm uppercase mb-2 block flex items-center gap-2"><Waves className="w-4 h-4"/> Discipline & Exploration</span>
+            <h4 className="text-4xl font-extrabold text-white mb-2 tracking-tighter">Natation</h4>
+            <p className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">De médaillé à l'exploration marine <ArrowRight className="w-4 h-4 inline" /></p>
+          </div>
+        </div>
+      </div>
+
+      {/* COLONNE DROITE (CINÉPHILE & GAMER EMPILÉS) */}
+     {/* COLONNE DROITE (CINÉPHILE & GAMER - STYLE PREMIUM) */}
+<div className="flex flex-col gap-8">
+  
+  {/* CARTE CINÉPHILE - EFFET NEON RED */}
+  <motion.div 
+    whileHover={{ y: -5 }}
+    className={`relative flex-1 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-3xl p-8 overflow-hidden group transition-all duration-500 hover:border-red-500/40 shadow-xl`}
+  >
+    {/* Glow de fond au survol */}
+    <div className="absolute -inset-24 bg-red-600/10 blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+    
+    <div className="relative z-10">
+      <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}>
+        <Tv className="w-6 h-6 text-red-500 animate-pulse" /> 
+        Cinéphile
+      </h3>
+      
+      <div className="space-y-6">
+        {[
+          { name: "Stranger Things", tag: "Mystère & 80s", img: "/images/passions/st.jpg", color: "group-hover:text-red-500" },
+          { name: "Echoes of the Past", tag: "Drame Égyptien", img: "/images/passions/echo.webp", color: "group-hover:text-yellow-500" }
+        ].map((item, i) => (
+          <div key={i} className="flex items-center gap-4 group/item cursor-pointer">
+            <div className="relative w-14 h-14 shrink-0 rounded-xl overflow-hidden border border-white/10 shadow-lg">
+              <img src={item.img} className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110" />
+            </div>
+            <div>
+              <h4 className={`font-bold ${themeClasses.text} ${item.color} transition-colors duration-300`}>{item.name}</h4>
+              <p className="text-xs text-gray-500 font-mono uppercase tracking-tighter">{item.tag}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </motion.div>
+
+  {/* CARTE GAMER - EFFET NEON PURPLE */}
+  <motion.div 
+    whileHover={{ y: -5 }}
+    className={`relative flex-1 ${themeClasses.cardBg} border ${themeClasses.cardBorder} rounded-3xl p-8 overflow-hidden group transition-all duration-500 hover:border-purple-500/40 shadow-xl`}
+  >
+    {/* Glow de fond au survol */}
+    <div className="absolute -inset-24 bg-purple-600/10 blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+    <div className="relative z-10">
+      <h3 className={`text-2xl font-bold ${themeClasses.text} mb-8 flex items-center gap-3`}>
+        <Gamepad2 className="w-6 h-6 text-purple-500" /> 
+        Gamer
+      </h3>
+      
+      <div className="space-y-6">
+        {[
+          { name: "Football Manager", tag: "Stratégie", img: "/images/fm.avif", color: "group-hover:text-purple-400" },
+          { name: "The Last of Us", tag: "Narratif", img: "/images/last.jpg", color: "group-hover:text-cyan-500" }
+        ].map((item, i) => (
+          <div key={i} className="flex items-center gap-4 group/item cursor-pointer">
+            <div className="relative w-14 h-14 shrink-0 rounded-xl overflow-hidden border border-white/10 shadow-lg">
+              <img src={item.img} className="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110" />
+            </div>
+            <div>
+              <h4 className={`font-bold ${themeClasses.text} ${item.color} transition-colors duration-300`}>{item.name}</h4>
+              <p className="text-xs text-gray-500 font-mono uppercase tracking-tighter">{item.tag}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </motion.div>
+</div>
+
+    </div>
+  )}
+</div>
+</SectionWrapper>
 
       {/* --- CONTACT --- */}
       <SectionWrapper id="contact" className={`py-32 ${themeClasses.sectionBgAlt} relative overflow-hidden`}>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
-              <span className={themeClasses.text}>Contactez</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-600">Moi</span>
+              <span className={themeClasses.text}>Contactez</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-cyan-500">Moi</span>
             </h2>
             <p className={`${themeClasses.textMuted} text-xl max-w-2xl mx-auto`}>Vous avez un projet de site web ou d'application mobile ? Discutons-en et construisons quelque chose d'exceptionnel.</p>
           </div>
@@ -1359,7 +1451,7 @@ const App = () => {
                      </div>
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-blue-500/10 rounded-lg text-blue-500 mt-1"><Briefcase className="w-6 h-6" /></div>
-                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Statut Actuel</p><div className="flex items-center gap-2"><span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><p className={`text-xl font-medium ${themeClasses.text}`}>En recherche de stage</p></div></div>
+                        <div><p className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-1">Statut Actuel</p><div className="flex items-center gap-2"><span className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span><p className={`text-xl font-medium ${themeClasses.text}`}>En recherche d'alternance</p></div></div>
                      </div>
                      <div className="flex items-start gap-4">
                         <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-500 mt-1"><Activity className="w-6 h-6" /></div>
@@ -1439,7 +1531,7 @@ const App = () => {
                         ></textarea>
                      </div>
                     <button type="submit" disabled={formStatus === 'sending'} className="group relative w-full py-5 rounded-xl overflow-hidden border border-teal-500/50 text-teal-600 font-bold tracking-widest uppercase text-sm transition-all duration-300 hover:shadow-[0_0_40px_rgba(20,184,166,0.3)] hover:border-teal-400">
-                      <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-gradient-to-r from-teal-500 to-cyan-600 transition-transform duration-500 ease-out" />
+                      <div className="absolute inset-0 translate-y-full group-hover:translate-y-0 bg-gradient-to-r from-teal-500 to-cyan-500 transition-transform duration-500 ease-out" />
                       <span className="relative z-10 group-hover:text-white transition-colors duration-300">{formStatus === 'sending' ? 'Préparation...' : 'Envoyer le message'}</span>
                     </button>
                   </form>
