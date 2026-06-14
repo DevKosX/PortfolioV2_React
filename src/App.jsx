@@ -220,6 +220,7 @@ const App = () => {
   const [activeTrip, setActiveTrip] = useState(null); 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeCategory, setActiveCategory] = useState("Langages & Fondamentaux");
+  const [projectPage, setProjectPage] = useState(0);
   
   // State pour l'animation "Scanner" de la section About
   const [scanComplete, setScanComplete] = useState(false);
@@ -307,7 +308,7 @@ const App = () => {
         title: "Stage Développement SE", 
         company: "Université Paris Cité",
         date: "Avr 2026 - Juil 2026", 
-        desc: "Développement d'un drone de surface autonome (USV) pour la mesure de la qualité de l'eau de la Seine.", 
+        desc: "J'ai participé au développement d'un drone de surface autonome (USV) pour la mesure de la qualité de l'eau de la Seine.", 
         fullDesc: "Développement d'un drone de surface autonome (USV) pour la mesure de la qualité de l'eau de la Seine, incluant la conception du système embarqué et la création d'une interface de suivi des données dans le cadre d'un projet multi-partenarial. Ce stage m'a permis de travailler sur des technologies de pointe en IoT et embarqué, avec un impact environnemental direct.",
         skills: ["Systèmes Embarqués", "Python", "Développement Full-Stack", "Interface de suivi développés", "Projet multi-partenarial"],
         realizations: [
@@ -364,13 +365,14 @@ const App = () => {
         date: "Oct 2021 - Mai 2022", 
         desc: "Encadrement sportif et gestion tactique.", 
         fullDesc: "En tant que jeune assistant coach, j'ai aidé l'entraîneur principal à composer ses entraînements et à développer les jeunes joueurs de ma ville. Mon rôle impliquait de réfléchir aux tactiques en fonction des adversaires et d'assurer la cohésion du groupe. J'étais présent aux entraînements et aux matchs bénévolement. Nous avons réalisé une super saison, finissant à la 2ème place avec les benjamins d'Aubervilliers.",
-        skills: ["Leadership", "Gestion de conflits", "Pédagogie", "Stratégie Tactique", "Travail d'équipe"],
+        skills: ["Leadership", "Gestion de conflits", "Pédagogie", "Stratégie Tactique", "Travail d'équipe", "Apprentissage"],
         realizations: [
             "Vice-champion de la saison avec les Benjamins.",
             "Développement technique et tactique des jeunes.",
+            "Préparation des entrainement pour nos jeunes.",
             "Gestion de la cohésion de groupe."
         ],
-        images: ["/images/stade.jpg"], 
+        images: ["/images/passions/assistant.jpeg"], 
         icon: <Trophy />, 
         color: "text-green-500" 
 
@@ -568,7 +570,7 @@ const App = () => {
       bgImage: "/images/passions/casa.png",
       locations: [
         { name: "Casablanca (La Douceur)", desc: "La maison spacieuse de mon oncle. Ce qui marque ici, c'est le calme. Les goûters en famille, le thé, la paix familiale.", icon: <Utensils className="w-5 h-5" />, img: "/images/passions/hassan2.jpg" },
-        { name: "Agadir (La classe)", desc: "La modernité d'Agadir Bay, une Coupe d'Afrique des Nations vécu en 2025 tout simplement historique et des soirées formidables", icon: <Sun className="w-5 h-5" />, img: "/images/passions/mamara.png" },
+        { name: "Agadir (La classe)", desc: "La modernité d'Agadir Bay, une Coupe d'Afrique des Nations vécu en 2025 tout simplement historique et des soirées formidables", icon: <Sun className="w-5 h-5" />, img: "/images/passions/agadir.png" },
         { name: "Nador (Nature & Racines)", desc: "Les racines de ma mère. La belle Méditerranée sauvage. La forêt, la nature brute. Le ressourcement total.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/nador.png" }
       ]
     },
@@ -586,10 +588,10 @@ const App = () => {
       "Malheureusement à l'age de mes 16 ans, j'ai eu la maladie d’Osgood, c'est une sorte de blessure au genou pendant la croissance qui est venu freiné mon rêve de devenir footballeur professionnel en m'éloignant une longue période des terrains de foot. J’étais loin d’être le plus doué, mais j’essayais toujours de me donner à fond et de travailler pour atteindre mes objectifs c’est aussi le profil que je retrouve dans l’informatique. J’essayais d’être le plus régulier et la personne la plus motivée possible."
     ],
     locations: [
-      { name: "Compétition", desc: "La rigueur du niveau National.", icon: <Trophy className="w-5 h-5" />, img: "/images/passions/football1.jpg" },
-      { name: "Mental", desc: "La résilience face à la blessure.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/football2.jpg" },
+      { name: "Compétition", desc: "La rigueur du niveau National.", icon: <Trophy className="w-5 h-5" />, img: "/images/passions/football2.jpeg" },
+      { name: "Mental", desc: "La résilience après la blessure.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/football5.jpeg" },
       // --- AJOUT DE LA 3ÈME IMAGE ---
-      { name: "Formation", desc: "L'apprentissage au club de l'ASJA.", icon: <Briefcase className="w-5 h-5" />, img: "/images/passions/football3.jpg" }
+      { name: "Formation", desc: "L'apprentissage au club de l'ASJA.", icon: <Briefcase className="w-5 h-5" />, img: "/images/passions/football1.jpeg" }
     ]
   },
   natation: {
@@ -600,13 +602,13 @@ const App = () => {
     bgImage: "/images/passions/natation.jpg",
     paragraphs: [
       "De très nul à médaillé, j’ai relevé un défi : apprendre à nager. Après une formation de deux semaines que j’ai beaucoup appréciée, j’ai poursuivi deux ans de natation pour obtenir mon diplôme, suivis d’une année de compétition. Cette discipline m’a apporté gainage et agilité pour mes meilleurs années de football.",
-      "Aujourd'hui, je nage partout : de l'Atlantique à la Mer Rouge, en passant par le Nil. J'aime perfectionner mes plongeons et battre mes records d'apnée, c'est l'une de mes passions préférés."
+      "Aujourd'hui, je nage partout : de l'Atlantique à la Mer Rouge, en passant par le Nil et la Méditéranée. J'aime perfectionner mes plongeons et battre mes records d'apnée, c'est l'une de mes passions préférés."
     ],
     locations: [
-      { name: "Progression", desc: "Du débutant au compétiteur.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/natation1.jpg" },
-      { name: "Exploration", desc: "Nager dans les plus beaux spots.", icon: <Globe className="w-5 h-5" />, img: "/images/passions/natation2.jpg" },
+      { name: "Progression", desc: "Du débutant au compétiteur.", icon: <Waves className="w-5 h-5" />, img: "/images/passions/image8.jpeg" },
+      { name: "Exploration", desc: "Nager dans les plus beaux spots.", icon: <Globe className="w-5 h-5" />, img: "/images/passions/image13.jpeg" },
       // --- AJOUT DE LA 3ÈME IMAGE ---
-      { name: "Apnée", desc: "Dépassement de soi sous l'eau.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/natation3.jpg" }
+      { name: "Apnée", desc: "Dépassement de soi sous l'eau.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/image7.jpeg" }
     ]
   }
 
@@ -627,7 +629,7 @@ const App = () => {
 
   ];
 
-  const techStackStructured = { "Langages & Fondamentaux": [ { name: "HTML / CSS", projects: "12+", icon: <Layout />, color: "text-orange-400", gradient: "from-orange-400 to-red-500" }, { name: "JavaScript", projects: 6, icon: <FileCode />, color: "text-yellow-400", gradient: "from-yellow-400 to-orange-500" }, { name: "Java", projects: 5, icon: <Code2 />, color: "text-orange-500", gradient: "from-orange-500 to-red-600" }, { name: "SQL", projects: 5, icon: <Database />, color: "text-pink-400", gradient: "from-pink-400 to-rose-600" }, { name: "PHP", projects: 4, icon: <Terminal />, color: "text-indigo-400", gradient: "from-indigo-400 to-purple-600" }, { name: "Python", projects: 3, icon: <Code2 />, color: "text-emerald-400", gradient: "from-emerald-400 to-green-600" }, { name: "Bash", projects: 3, icon: <Terminal />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Dart", projects: 2, icon: <Smartphone />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "TypeScript", projects: 1, icon: <FileCode />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "C++", projects: 1, icon: <Braces />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-700" }, ], "Frameworks & Web": [ { name: "AJAX / JSON", projects: 6, icon: <FileJson />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Bootstrap", projects: 4, icon: <Layout />, color: "text-purple-500", gradient: "from-purple-500 to-indigo-600" }, { name: "Tailwind CSS", projects: 3, icon: <Layout />, color: "text-cyan-400", gradient: "from-cyan-400 to-teal-500" }, { name: "API REST", projects: 3, icon: <Globe />, color: "text-cyan-500", gradient: "from-cyan-500 to-teal-500" }, { name: "Laravel", projects: 2, icon: <Layers />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "React", projects: 2, icon: <Globe />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "Flutter", projects: 2, icon: <Smartphone />, color: "text-sky-400", gradient: "from-sky-400 to-blue-600" }, { name: "Node.js", projects: 2, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Blade", projects: 2, icon: <FileCode />, color: "text-red-400", gradient: "from-red-400 to-orange-500" }, { name: "Spring Boot", projects: 1, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-700" }, { name: "Flask", projects: 1, icon: <Server />, color: "text-gray-300", gradient: "from-gray-300 to-gray-500" }, { name: "JWT", projects: 1, icon: <Lock />, color: "text-yellow-500", gradient: "from-yellow-500 to-amber-600" }, { name: "jQuery", projects: 1, icon: <FileJson />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-500" }, ], "Architecture & Conception": [ { name: "UML", projects: 8, icon: <Activity />, color: "text-yellow-600", gradient: "from-yellow-600 to-amber-700" }, { name: "MVC", projects: "5+", icon: <Layers />, color: "text-indigo-500", gradient: "from-indigo-500 to-purple-600" }, { name: "SOLID", projects: 5, icon: <ShieldCheck />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "MVVM", projects: "4+", icon: <Smartphone />, color: "text-rose-500", gradient: "from-rose-500 to-pink-600" }, { name: "Clean Code", projects: 3, icon: <Sparkles />, color: "text-teal-500", gradient: "from-teal-500 to-emerald-600" }, { name: "TDD", projects: 2, icon: <CheckCircle2 />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, ], "Données & Stockage": [ { name: "MySQL", projects: 6, icon: <Database />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "phpMyAdmin", projects: 4, icon: <Settings />, color: "text-orange-300", gradient: "from-orange-300 to-yellow-500" }, { name: "PostgreSQL", projects: 3, icon: <Database />, color: "text-indigo-400", gradient: "from-indigo-400 to-blue-500" }, { name: "SQLite", projects: 2, icon: <HardDrive />, color: "text-sky-400", gradient: "from-sky-400 to-blue-500" }, { name: "Firebase", projects: 2, icon: <Cloud />, color: "text-yellow-500", gradient: "from-yellow-500 to-orange-600" }, { name: "MongoDB", projects: 1, icon: <Database />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Redis", projects: 1, icon: <Database />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, ], "DevOps, Outils & Serveurs": [ { name: "Git / GitHub", projects: 12, icon: <GitBranch />, color: "text-orange-600", gradient: "from-orange-600 to-red-600" }, { name: "Linux", projects: 8, icon: <Terminal />, color: "text-yellow-300", gradient: "from-yellow-300 to-amber-500" }, { name: "Maven", projects: 4, icon: <Wrench />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "Jira / Freedcamp", projects: 3, icon: <Layout />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "VirtualBox", projects: 3, icon: <Box />, color: "text-blue-300", gradient: "from-blue-300 to-indigo-400" }, { name: "GitLab", projects: 2, icon: <GitBranch />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Docker", projects: 2, icon: <Box />, color: "text-blue-500", gradient: "from-blue-500 to-indigo-600" }, { name: "Composer", projects: 2, icon: <Box />, color: "text-amber-600", gradient: "from-amber-600 to-orange-700" }, { name: "Postman", projects: 2, icon: <Send />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Vagrant", projects: 2, icon: <Box />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "Figma / Readdy", projects: 2, icon: <Layout />, color: "text-purple-400", gradient: "from-purple-400 to-pink-500" }, { name: "Jenkins", projects: 1, icon: <Settings />, color: "text-red-300", gradient: "from-red-300 to-orange-400" }, { name: "Nginx", projects: 1, icon: <Server />, color: "text-cyan-500", gradient: "from-cyan-500 to-emerald-500" }, { name: "Apache Tomcat", projects: 1, icon: <Server />, color: "text-yellow-600", gradient: "from-yellow-600 to-orange-700" }, ], "IDE & Productivité": [ { name: "VS Code", projects: 12, icon: <Monitor />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "IntelliJ IDEA", projects: 10, icon: <Monitor />, color: "text-purple-500", gradient: "from-purple-500 to-pink-600" }, { name: "Prompt IA", projects: 7, icon: <Sparkles />, color: "text-fuchsia-400", gradient: "from-fuchsia-400 to-purple-600" }, { name: "NetBeans", projects: 2, icon: <Layout />, color: "text-teal-400", gradient: "from-teal-400 to-green-500" }, { name: "Xcode", projects: 1, icon: <Monitor />, color: "text-blue-300", gradient: "from-blue-300 to-sky-400" }, ] };
+  const techStackStructured = { "Langages & Fondamentaux": [ { name: "HTML / CSS", projects: "12+", percentage: 85, icon: <Layout />, color: "text-orange-400", gradient: "from-orange-400 to-red-500" }, { name: "JavaScript", projects: 6, percentage: 85, icon: <FileCode />, color: "text-yellow-400", gradient: "from-yellow-400 to-orange-500" }, { name: "Java", projects: 5, percentage: 80, icon: <Code2 />, color: "text-orange-500", gradient: "from-orange-500 to-red-600" }, { name: "SQL", projects: 5, percentage: 80, icon: <Database />, color: "text-pink-400", gradient: "from-pink-400 to-rose-600" }, { name: "PHP", projects: 4, percentage: 75, icon: <Terminal />, color: "text-indigo-400", gradient: "from-indigo-400 to-purple-600" }, { name: "Python", projects: 3, percentage: 70, icon: <Code2 />, color: "text-emerald-400", gradient: "from-emerald-400 to-green-600" }, { name: "Bash", projects: 3, percentage: 70, icon: <Terminal />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Dart", projects: 2, percentage: 60, icon: <Smartphone />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "TypeScript", projects: 1, percentage: 50, icon: <FileCode />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "C++", projects: 1, percentage: 50, icon: <Braces />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-700" }, ], "Frameworks & Web": [ { name: "AJAX / JSON", projects: 6, percentage: 85, icon: <FileJson />, color: "text-gray-400", gradient: "from-gray-400 to-gray-600" }, { name: "Bootstrap", projects: 4, percentage: 75, icon: <Layout />, color: "text-purple-500", gradient: "from-purple-500 to-indigo-600" }, { name: "Tailwind CSS", projects: 3, percentage: 70, icon: <Layout />, color: "text-cyan-400", gradient: "from-cyan-400 to-teal-500" }, { name: "API REST", projects: 3, percentage: 70, icon: <Globe />, color: "text-cyan-500", gradient: "from-cyan-500 to-teal-500" }, { name: "Laravel", projects: 2, percentage: 60, icon: <Layers />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "React", projects: 2, percentage: 60, icon: <Globe />, color: "text-cyan-400", gradient: "from-cyan-400 to-blue-500" }, { name: "Flutter", projects: 2, percentage: 60, icon: <Smartphone />, color: "text-sky-400", gradient: "from-sky-400 to-blue-600" }, { name: "Node.js", projects: 2, percentage: 60, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Blade", projects: 2, percentage: 60, icon: <FileCode />, color: "text-red-400", gradient: "from-red-400 to-orange-500" }, { name: "Spring Boot", projects: 1, percentage: 50, icon: <Server />, color: "text-green-500", gradient: "from-green-500 to-emerald-700" }, { name: "Flask", projects: 1, percentage: 50, icon: <Server />, color: "text-gray-300", gradient: "from-gray-300 to-gray-500" }, { name: "JWT", projects: 1, percentage: 50, icon: <Lock />, color: "text-yellow-500", gradient: "from-yellow-500 to-amber-600" }, { name: "jQuery", projects: 1, percentage: 50, icon: <FileJson />, color: "text-blue-600", gradient: "from-blue-600 to-indigo-500" }, ], "Architecture & Conception": [ { name: "UML", projects: 8, percentage: 85, icon: <Activity />, color: "text-yellow-600", gradient: "from-yellow-600 to-amber-700" }, { name: "MVC", projects: "5+", percentage: 80, icon: <Layers />, color: "text-indigo-500", gradient: "from-indigo-500 to-purple-600" }, { name: "SOLID", projects: 5, percentage: 80, icon: <ShieldCheck />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "MVVM", projects: "4+", percentage: 75, icon: <Smartphone />, color: "text-rose-500", gradient: "from-rose-500 to-pink-600" }, { name: "Clean Code", projects: 3, percentage: 70, icon: <Sparkles />, color: "text-teal-500", gradient: "from-teal-500 to-emerald-600" }, { name: "TDD", projects: 2, percentage: 60, icon: <CheckCircle2 />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, ], "Données & Stockage": [ { name: "MySQL", projects: 6, percentage: 85, icon: <Database />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "phpMyAdmin", projects: 4, percentage: 75, icon: <Settings />, color: "text-orange-300", gradient: "from-orange-300 to-yellow-500" }, { name: "PostgreSQL", projects: 3, percentage: 70, icon: <Database />, color: "text-indigo-400", gradient: "from-indigo-400 to-blue-500" }, { name: "SQLite", projects: 2, percentage: 60, icon: <HardDrive />, color: "text-sky-400", gradient: "from-sky-400 to-blue-500" }, { name: "Firebase", projects: 2, percentage: 60, icon: <Cloud />, color: "text-yellow-500", gradient: "from-yellow-500 to-orange-600" }, { name: "MongoDB", projects: 1, percentage: 50, icon: <Database />, color: "text-green-500", gradient: "from-green-500 to-emerald-600" }, { name: "Redis", projects: 1, percentage: 50, icon: <Database />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, ], "DevOps, Outils & Serveurs": [ { name: "Git / GitHub", projects: 12, percentage: 85, icon: <GitBranch />, color: "text-orange-600", gradient: "from-orange-600 to-red-600" }, { name: "Linux", projects: 8, percentage: 85, icon: <Terminal />, color: "text-yellow-300", gradient: "from-yellow-300 to-amber-500" }, { name: "Maven", projects: 4, percentage: 75, icon: <Wrench />, color: "text-red-500", gradient: "from-red-500 to-rose-600" }, { name: "Jira / Freedcamp", projects: 3, percentage: 70, icon: <Layout />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "VirtualBox", projects: 3, percentage: 70, icon: <Box />, color: "text-blue-300", gradient: "from-blue-300 to-indigo-400" }, { name: "GitLab", projects: 2, percentage: 60, icon: <GitBranch />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Docker", projects: 2, percentage: 60, icon: <Box />, color: "text-blue-500", gradient: "from-blue-500 to-indigo-600" }, { name: "Composer", projects: 2, percentage: 60, icon: <Box />, color: "text-amber-600", gradient: "from-amber-600 to-orange-700" }, { name: "Postman", projects: 2, percentage: 60, icon: <Send />, color: "text-orange-500", gradient: "from-orange-500 to-red-500" }, { name: "Vagrant", projects: 2, percentage: 60, icon: <Box />, color: "text-blue-400", gradient: "from-blue-400 to-cyan-500" }, { name: "Figma / Readdy", projects: 2, percentage: 60, icon: <Layout />, color: "text-purple-400", gradient: "from-purple-400 to-pink-500" }, { name: "Jenkins", projects: 1, percentage: 50, icon: <Settings />, color: "text-red-300", gradient: "from-red-300 to-orange-400" }, { name: "Nginx", projects: 1, percentage: 50, icon: <Server />, color: "text-cyan-500", gradient: "from-cyan-500 to-emerald-500" }, { name: "Apache Tomcat", projects: 1, percentage: 50, icon: <Server />, color: "text-yellow-600", gradient: "from-yellow-600 to-orange-700" }, ], "IDE & Productivité": [ { name: "VS Code", projects: 12, percentage: 85, icon: <Monitor />, color: "text-blue-500", gradient: "from-blue-500 to-cyan-500" }, { name: "IntelliJ IDEA", projects: 10, percentage: 85, icon: <Monitor />, color: "text-purple-500", gradient: "from-purple-500 to-pink-600" }, { name: "Prompt IA", projects: 7, percentage: 80, icon: <Sparkles />, color: "text-fuchsia-400", gradient: "from-fuchsia-400 to-purple-600" }, { name: "NetBeans", projects: 2, percentage: 60, icon: <Layout />, color: "text-teal-400", gradient: "from-teal-400 to-green-500" }, { name: "Xcode", projects: 1, percentage: 50, icon: <Monitor />, color: "text-blue-300", gradient: "from-blue-300 to-sky-400" }, ] };
 
   return (
     <div className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} font-sans overflow-x-hidden transition-colors duration-300 selection:bg-teal-500/30 selection:text-teal-200`}>
@@ -832,9 +834,9 @@ const App = () => {
 
             <div className="lg:col-span-2 space-y-6">
               {[
-                  { icon: <GraduationCap />, title: "Formation Académique", text: "Actuellement en 3ème année de BUT Informatique. Parcours axé sur l'architecture logicielle, l'algorithmique complexe et les bases de données." },
-                  { icon: <BrainCircuit />, title: "Vision & Approche", text: "Polyvalence Backend (Java, PHP, Postgres) & Frontend (React, Tailwind). Approche centrée sur la qualité (Clean Code, SOLID) et l'UX." },
-                  { icon: <Rocket />, title: "Mission Actuelle", text: "À la recherche d'un stage de 14 à 16 semaines. Prêt à intégrer une équipe et apporter une valeur ajoutée immédiate." }
+                  { icon: <GraduationCap />, title: "Formation Académique", text: "Je suis actuellement en 3ème année de BUT Informatique dans un parcours axé sur l'architecture logicielle, l'algorithmique complexe et les bases de données." },
+                  { icon: <BrainCircuit />, title: "Vision technique", text: "Je détiens une polyvalence au niveaud du backend avec des langages comme (Java, PHP, Postgres) & Frontend (React, Tailwind). J'ai aussi une approche dédié sur la qualité de mon code avec les méthodes (Clean Code, SOLID) et l'UX." },
+                  { icon: <Rocket />, title: "Mission Actuelle", text: "À la recherche d'un contrat d'alternance de 3 ans pour école d'ingénieur." }
               ].map((item, idx) => (
                   <motion.div 
                     key={idx}
@@ -1140,8 +1142,30 @@ const App = () => {
              </h2>
              <p className={`${themeClasses.textMuted} text-center max-w-xl`}>Une galerie de mes réalisations, alliant technique et créativité.</p>
           </div>
+          
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mb-8">
+            <button 
+              onClick={() => setProjectPage(Math.max(0, projectPage - 1))}
+              disabled={projectPage === 0}
+              className={`p-3 rounded-full transition-all ${projectPage === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-teal-500/20 hover:scale-110'} ${isDarkMode ? 'bg-white/5 text-white' : 'bg-gray-200 text-gray-800'}`}
+            >
+              <ArrowRight className="w-6 h-6 rotate-180" />
+            </button>
+            <span className={`${themeClasses.textMuted} font-mono text-sm`}>
+              Page {projectPage + 1} / {Math.ceil(projects.length / 9)}
+            </span>
+            <button 
+              onClick={() => setProjectPage(Math.min(Math.ceil(projects.length / 9) - 1, projectPage + 1))}
+              disabled={projectPage >= Math.ceil(projects.length / 9) - 1}
+              className={`p-3 rounded-full transition-all ${projectPage >= Math.ceil(projects.length / 9) - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-teal-500/20 hover:scale-110'} ${isDarkMode ? 'bg-white/5 text-white' : 'bg-gray-200 text-gray-800'}`}
+            >
+              <ArrowRight className="w-6 h-6" />
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((item) => (
+            {projects.slice(projectPage * 9, (projectPage + 1) * 9).map((item) => (
               <div key={item.id} className="group relative h-[450px] rounded-3xl overflow-hidden cursor-pointer shadow-2xl border border-white/5" onClick={() => setSelectedProject(item)}>
                 <div className="absolute inset-0 bg-gray-900">
                    <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[2px]" onError={(e) => {e.target.style.display='none';}} />
@@ -1226,7 +1250,7 @@ const App = () => {
                   <div className="text-white drop-shadow-md">{tech.icon}</div>
                 </div>
                 <div className="text-[10px] font-mono text-gray-500 border border-gray-800 px-2 py-1 rounded">
-                   {tech.projects} PROJETS
+                   {tech.percentage}%
                 </div>
               </div>
               
@@ -1234,9 +1258,9 @@ const App = () => {
               
               {/* Barre de progression subtile */}
               <div className="mt-4 w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
+                  animate={{ width: `${tech.percentage}%` }}
                   transition={{ duration: 1, delay: 0.5 }}
                   className={`h-full bg-gradient-to-r ${tech.gradient}`}
                 />
