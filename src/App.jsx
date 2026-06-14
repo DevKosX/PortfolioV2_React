@@ -589,7 +589,7 @@ const App = () => {
     ],
     locations: [
       { name: "Compétition", desc: "La rigueur du niveau National.", icon: <Trophy className="w-5 h-5" />, img: "/images/passions/football2.jpeg" },
-      { name: "Mental", desc: "La résilience après la blessure.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/football5.jpeg" },
+      { name: "Mental", desc: "La résilience après la blessure.", icon: <HeartPulse className="w-5 h-5" />, img: "/images/passions/image5.jpeg" },
       // --- AJOUT DE LA 3ÈME IMAGE ---
       { name: "Formation", desc: "L'apprentissage au club de l'ASJA.", icon: <Briefcase className="w-5 h-5" />, img: "/images/passions/football1.jpeg" }
     ]
